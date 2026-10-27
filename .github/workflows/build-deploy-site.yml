@@ -36,9 +36,12 @@ jobs:
 
       - name: Build with Astro
         run: |
-          pnpm run build \
+          pnpm astro build \
           --site "${{ steps.pages.outputs.origin }}" \
           --base "${{ steps.pages.outputs.base_path }}"
+
+      - name: Generate CV PDF
+        run: node scripts/build-pdf.mjs
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5.0.0
