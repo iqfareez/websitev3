@@ -13,6 +13,14 @@ export default defineConfig({
 
     fonts: [
         {
+            provider: fontProviders.fontsource(),
+            name: 'Source Sans 3',
+            cssVariable: '--font-source-sans-3',
+            weights: [300, 400, 600, 700],
+            styles: ['normal', 'italic'],
+            fallbacks: ['Arial', 'sans-serif'],
+        },
+        {
             provider: fontProviders.local(),
             name: 'Atkinson',
             cssVariable: '--font-atkinson',

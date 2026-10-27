@@ -1,0 +1,93 @@
+# Edit this file to update the CV page.
+name: Muhammad Fareez
+role: Aspiring .NET Developer
+location: Selangor/Kuala Lumpur
+# Optional. Any CSS color; see README for Awesome-CV presets.
+accent: "#dc3522"
+# Shows a banner that marks this page as the theme demo. Remove this line for your own CV.
+demo: false
+summary: >-
+  Aspiring .NET Developer with hands-on experience in software development across
+  various technologies. More than 3 years of experience building software,
+  including industry projects and side projects. A solid foundation in .NET and
+  eager to further expand my skills. Passionate about delivering quality solutions
+  and ready to contribute to innovative .NET projects.
+contact:
+  email: m.fareez.iqmal@gmail.com
+  linkedin: https://www.linkedin.com/in/iqfareez
+  github: https://github.com/iqfareez
+projects:
+  - title: App Waktu Solat Malaysia — Personal project (Since 2021)
+    description: >-
+      Built and deployed a prayer time app with a Flutter frontend and a
+      Next.js-powered API, using CI/CD for continuous integration and app store
+      publishing. Achieved nearly 10,000 monthly active users.
+  - title: BUDI Timebank — Freelance project (2023)
+    description: >-
+      Played a pivotal role in developing the university's flagship project,
+      overseeing backend and database migration to improve functionality and user
+      experience. Built with Flutter, Dart, and Firebase.
+  - title: MasjidTV App — Freelance project (2023)
+    description: >-
+      Developed a prayer time system for TV digital signage using Flutter and Dart.
+experience:
+  - company: Geomatic Solutions
+    location: Kuala Lumpur
+    roles:
+      - title: Full Stack Software Engineer
+        location: Cyberjaya
+        dates: Feb 2024 – Present
+        points:
+          - Modernize several legacy applications to ensure maintainability and optimum performance.
+          - Exposes to wide range of tech stacks including .NET, PHP and Angular.
+  - company: Rocket Web Sdn. Bhd
+    location: Cyberjaya
+    roles:
+      - title: Software Engineer
+        dates: Aug 2023 – Present
+        points:
+          - Contributed to a cross-platform mobile application using Flutter, with an accompanying admin dashboard built on Laravel and MySQL.
+          - Implemented responsive UI/UX designs across various devices and screen sizes.
+          - Delivered comprehensive software training for clients to support smooth implementation and effective product usage.
+  - company: IOXTECH Sdn Bhd
+    location: Bangi
+    roles:
+      - title: Frontend Developer
+        dates: Feb 2023 – Aug 2023
+        points:
+          - Developed cross-platform mobile applications using Flutter.
+          - Collaborated closely with backend teams and product managers to ensure seamless integration and product delivery.
+          - Used Agile methodology for iterative development, frequent feedback, and efficient project delivery.
+  - company: System Consultancy Services
+    location: Wangsa Maju
+    roles:
+      - title: Engineering Trainee
+        dates: Jul 2022 – Sep 2022
+        points:
+          - Assisted in research and development of electric vehicle conversion.
+          - Developed an initial prototype of electronic torque vectoring using STM32.
+          - Performed field testing for an industrial-grade UAV.
+skills:
+  - category: Programming
+    items: C# · Kubernetes · .NET · C++ · Python · Dart · PHP · JavaScript · Node.js
+  - category: Software / Platforms
+    items: Visual Studio · Arduino · Flutter · Unity · Qt · Node-RED · Autodesk Fusion
+recognition:
+  - title: Speaker, Flutter Workshops
+    note: >-
+      Led sessions for “8 Jam 8 Apps” at IIUM and “Fluttering into the world of
+      mobile application development” at UKM. Delivered presentations and hands-on
+      guidance to students and corporate participants.
+  - title: Professional Certificate of Deep Learning in Intelligent Video Analytics and Computer Vision
+    note: "Centre of Unmanned Technology (CUTe). Competency level: Proficient."
+  - title: Getting Started with AI on Jetson Nano
+    note: NVIDIA Deep Learning Institute course.
+  - title: Participant, Pertandingan Keusahawanan Digital 2022
+    note: Digital entrepreneurship competition.
+  - title: Participant, ROBOCON 2022
+    note: Robotics competition.
+education:
+  - degree: Bachelor of Engineering (Mechatronics)
+    institution: International Islamic University Malaysia
+    dates: Graduated 2023
+languages: Bahasa Malaysia · English
