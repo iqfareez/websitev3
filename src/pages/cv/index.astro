@@ -8,9 +8,8 @@ const entry = await getEntry("cv", "cv");
 if (!entry) throw new Error("CV data is missing");
 
 const cv = entry.data;
-const [firstName, ...lastNames] = cv.name.split(" ");
 const pageTitle = `${cv.name} | CV`;
-const basePath = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const basePath = import.meta.env.BASE_URL.replace(/\/?$/, "/");
 const siteUrl = new URL("/", Astro.site).href;
 const pdfName = `${cv.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-cv.pdf`;
 const inlineStyles = `:root { --accent: ${cv.accent}; } @page { @bottom-center { content: "${cv.name} · Curriculum Vitae · " counter(page); } }`;
@@ -47,10 +46,7 @@ const displayUrl = (url: string) =>
     }
     <main class="page">
       <header class="cv-header">
-        <h1>
-          <span class="first-name">{firstName}</span>
-          {lastNames.join(" ")}
-        </h1>
+        <h1>{cv.name}</h1>
         <p class="position">{cv.role}</p>
         <ul class="contact">
           <li>{cv.location}</li>
@@ -62,8 +58,10 @@ const displayUrl = (url: string) =>
             <a href={cv.contact.github}>{displayUrl(cv.contact.github)}</a>
           </li>
         </ul>
-        <a class="download screen-only" href={`${basePath}cv.pdf`} download={pdfName}
-          >Download PDF</a
+        <a
+          class="download screen-only"
+          href={`${basePath}cv.pdf`}
+          download={pdfName}>Download PDF</a
         >
       </header>
 
