@@ -1,0 +1,57 @@
+---
+import { Image } from "astro:assets";
+import { IconArrowUpRight } from "@tabler/icons-astro";
+import type { Project } from "../data/projects/types";
+
+interface Props {
+  project: Project;
+  headingId: string;
+}
+
+const { project, headingId } = Astro.props;
+const href = project.href?.trim() || undefined;
+const Card = href ? "a" : "div";
+---
+
+<article class="h-full min-w-0">
+  <Card
+    class:list={[
+      "box-border flex h-full flex-col overflow-hidden rounded-lg border border-solid border-[rgb(var(--gray-light))] bg-white text-inherit no-underline",
+      href &&
+        "group transition-colors duration-150 hover:border-[rgb(var(--gray))] hover:text-inherit focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--accent)",
+    ]}
+    href={href}
+    aria-labelledby={headingId}
+  >
+    <Image
+      class="block aspect-video h-auto w-full rounded-none object-cover"
+      src={project.imgSrc}
+      alt=""
+      width={960}
+      height={540}
+      widths={[480, 768, 960]}
+      sizes="(min-width: 1072px) 496px, (min-width: 700px) calc((100vw - 80px) / 2), calc(100vw - 48px)"
+      loading="lazy"
+      decoding="async"
+    />
+    <div class="flex flex-1 flex-col p-5 min-[700px]:p-6">
+      <h3
+        class="m-0 mb-3 text-2xl leading-tight transition-colors duration-150 group-hover:text-(--accent) group-focus-visible:text-(--accent)"
+        id={headingId}
+      >
+        {project.title}
+      </h3>
+      <p class:list={["m-0 text-base leading-[1.65]", href && "mb-5"]}>
+        {project.description}
+      </p>
+      {
+        href && (
+          <span class="mt-auto inline-flex items-center gap-1 text-base text-(--accent)">
+            Learn more
+            <IconArrowUpRight size={18} aria-hidden="true" />
+          </span>
+        )
+      }
+    </div>
+  </Card>
+</article>

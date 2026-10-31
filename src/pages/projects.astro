@@ -1,0 +1,48 @@
+---
+import Page from "../layouts/Page.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import highlights from "../data/projects/highlights";
+import apps from "../data/projects/apps";
+import university from "../data/projects/uni";
+import others from "../data/projects/others";
+import archived from "../data/projects/archieved";
+
+const sections = [
+  { id: "highlights", title: "Highlights", projects: highlights },
+  { id: "apps", title: "Apps", projects: apps },
+  { id: "university", title: "University projects", projects: university },
+  { id: "others", title: "Other projects", projects: others },
+  { id: "archived", title: "Archived", projects: archived },
+];
+---
+
+<Page
+  title="Projects"
+  description="Explore the apps, tools, and university projects Muhammad Fareez Iqmal has worked on."
+  image={highlights[0].imgSrc}
+>
+  <span slot="subtitle">
+    "Everyone needs a hobby." - Tony Stark, <cite>Iron Man 3</cite>
+  </span>
+  <div class="flex flex-col gap-12">
+    {
+      sections.map(({ id, title, projects }) => (
+        <section aria-labelledby={`${id}-heading`}>
+          <h2 class="m-0 mb-6 text-3xl leading-tight" id={`${id}-heading`}>
+            {title}
+          </h2>
+          <ul class="m-0 grid list-none grid-cols-1 gap-8 p-0 min-[700px]:grid-cols-2">
+            {projects.map((project, index) => (
+              <li class="min-w-0">
+                <ProjectCard
+                  project={project}
+                  headingId={`${id}-project-${index}`}
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</Page>
