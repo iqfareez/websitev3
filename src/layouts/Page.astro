@@ -1,0 +1,40 @@
+---
+import type { ImageMetadata } from 'astro';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+
+interface Props {
+  title: string;
+  description: string;
+  documentTitle?: string;
+  image?: ImageMetadata;
+}
+
+const { title, description, documentTitle = `${title} | ${SITE_TITLE}`, image } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={documentTitle} description={description} image={image} />
+  </head>
+  <body class="flex min-h-dvh flex-col bg-[#fafafa] bg-none text-[17px] leading-[1.65]">
+    <Header />
+    <main
+      class="mx-auto my-0 box-border w-5xl max-w-[calc(100%-48px)] flex-[1_0_auto] px-0 pt-7 pb-16"
+      aria-labelledby="page-title"
+    >
+      <h1
+        class="m-0 mb-8 border-0 border-b border-solid border-[rgb(var(--gray-light))] pb-7 text-[clamp(40px,5vw,60px)] leading-[1.1]"
+        id="page-title"
+      >
+        {title}
+      </h1>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+

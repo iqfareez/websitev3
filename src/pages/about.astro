@@ -1,63 +1,103 @@
 ---
-import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
-import Layout from '../layouts/BlogPost.astro';
+import { Image } from "astro:assets";
+import { getEntry } from "astro:content";
+import {
+  IconBrandGithubFilled,
+  IconBrandLinkedinFilled,
+  IconBrandX,
+  IconMailFilled,
+} from "@tabler/icons-astro";
+import avatar from "../assets/images/avatar.jpg";
+import Page from "../layouts/Page.astro";
+
+const cv = await getEntry("cv", "cv");
+if (!cv) throw new Error("CV contact details are missing");
+
+const socialLinks = [
+  {
+    label: "Email Fareez",
+    href: `mailto:${cv.data.contact.email}`,
+    icon: IconMailFilled,
+  },
+  {
+    label: "Fareez on GitHub",
+    href: cv.data.contact.github,
+    icon: IconBrandGithubFilled,
+  },
+  {
+    label: "Fareez on LinkedIn",
+    href: cv.data.contact.linkedin,
+    icon: IconBrandLinkedinFilled,
+  },
+  { label: "Fareez on X", href: "https://x.com/iqfareez", icon: IconBrandX },
+];
 ---
 
-<Layout
-	title="About Me"
-	description="Lorem ipsum dolor sit amet"
-	pubDate={new Date('August 08 2021')}
-	heroImage={AboutHeroImage}
+<Page
+  title="About"
+  documentTitle="About | Muhammad Fareez Iqmal"
+  description="Meet Muhammad Fareez Iqmal, a software engineer building web systems and mobile applications with Flutter, Laravel, and .NET."
+  image={avatar}
 >
-	<p>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-		labore et dolore magna aliqua. Vitae ultricies leo integer malesuada nunc vel risus commodo
-		viverra. Adipiscing enim eu turpis egestas pretium. Euismod elementum nisi quis eleifend quam
-		adipiscing. In hac habitasse platea dictumst vestibulum. Sagittis purus sit amet volutpat. Netus
-		et malesuada fames ac turpis egestas. Eget magna fermentum iaculis eu non diam phasellus
-		vestibulum lorem. Varius sit amet mattis vulputate enim. Habitasse platea dictumst quisque
-		sagittis. Integer quis auctor elit sed vulputate mi. Dictumst quisque sagittis purus sit amet.
-	</p>
+  <div
+    class="grid grid-cols-[312px_minmax(0,1fr)] items-start gap-10 max-[800px]:mx-auto max-[800px]:max-w-2xl max-[800px]:grid-cols-1 max-[800px]:gap-9"
+  >
+    <section class="text-center" aria-labelledby="profile-name">
+      <Image
+        class="mx-auto mt-0 mb-4.5 block size-48 rounded-full object-cover"
+        src={avatar}
+        alt="Muhammad Fareez Iqmal"
+        width={192}
+        height={192}
+        widths={[192, 384, 576]}
+        sizes="192px"
+        fit="cover"
+        loading="eager"
+      />
+      <h2 class="m-0 text-2xl leading-[1.35] text-black" id="profile-name">
+        Muhammad Fareez
+      </h2>
+      <p class="mt-2 mb-5 text-[rgb(var(--gray))]">Software Engineer</p>
+      <nav class="flex justify-center" aria-label="Contact and social profiles">
+        {
+          socialLinks.map(({ label, href, icon: Icon }) => (
+            <a
+              class="inline-flex size-11 items-center justify-center rounded-sm text-[#374151] transition-colors duration-150 hover:text-(--accent) focus-visible:text-(--accent) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
+              href={href}
+              aria-label={label}
+              title={label}
+            >
+              <Icon size={32} stroke={1.8} aria-hidden="true" />
+            </a>
+          ))
+        }
+      </nav>
+      <a
+        class="mt-5 inline-block text-base leading-[1.65] text-(--accent) underline underline-offset-3 transition-colors duration-150 hover:text-(--accent-dark) focus-visible:text-(--accent-dark) focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-current"
+        href="/cv">Open CV</a
+      >
+    </section>
 
-	<p>
-		Morbi tristique senectus et netus. Id semper risus in hendrerit gravida rutrum quisque non
-		tellus. Habitasse platea dictumst quisque sagittis purus sit amet. Tellus molestie nunc non
-		blandit massa. Cursus vitae congue mauris rhoncus. Accumsan tortor posuere ac ut. Fringilla urna
-		porttitor rhoncus dolor. Elit ullamcorper dignissim cras tincidunt lobortis. In cursus turpis
-		massa tincidunt dui ut ornare lectus. Integer feugiat scelerisque varius morbi enim nunc.
-		Bibendum neque egestas congue quisque egestas diam. Cras ornare arcu dui vivamus arcu felis
-		bibendum. Dignissim suspendisse in est ante in nibh mauris. Sed tempus urna et pharetra pharetra
-		massa massa ultricies mi.
-	</p>
-
-	<p>
-		Mollis nunc sed id semper risus in. Convallis a cras semper auctor neque. Diam sit amet nisl
-		suscipit. Lacus viverra vitae congue eu consequat ac felis donec. Egestas integer eget aliquet
-		nibh praesent tristique magna sit amet. Eget magna fermentum iaculis eu non diam. In vitae
-		turpis massa sed elementum. Tristique et egestas quis ipsum suspendisse ultrices. Eget lorem
-		dolor sed viverra ipsum. Vel turpis nunc eget lorem dolor sed viverra. Posuere ac ut consequat
-		semper viverra nam. Laoreet suspendisse interdum consectetur libero id faucibus. Diam phasellus
-		vestibulum lorem sed risus ultricies tristique. Rhoncus dolor purus non enim praesent elementum
-		facilisis. Ultrices tincidunt arcu non sodales neque. Tempus egestas sed sed risus pretium quam
-		vulputate. Viverra suspendisse potenti nullam ac tortor vitae purus faucibus ornare. Fringilla
-		urna porttitor rhoncus dolor purus non. Amet dictum sit amet justo donec enim.
-	</p>
-
-	<p>
-		Mattis ullamcorper velit sed ullamcorper morbi tincidunt. Tortor posuere ac ut consequat semper
-		viverra. Tellus mauris a diam maecenas sed enim ut sem viverra. Venenatis urna cursus eget nunc
-		scelerisque viverra mauris in. Arcu ac tortor dignissim convallis aenean et tortor at. Curabitur
-		gravida arcu ac tortor dignissim convallis aenean et tortor. Egestas tellus rutrum tellus
-		pellentesque eu. Fusce ut placerat orci nulla pellentesque dignissim enim sit amet. Ut enim
-		blandit volutpat maecenas volutpat blandit aliquam etiam. Id donec ultrices tincidunt arcu. Id
-		cursus metus aliquam eleifend mi.
-	</p>
-
-	<p>
-		Tempus quam pellentesque nec nam aliquam sem. Risus at ultrices mi tempus imperdiet. Id porta
-		nibh venenatis cras sed felis eget velit. Ipsum a arcu cursus vitae. Facilisis magna etiam
-		tempor orci eu lobortis elementum. Tincidunt dui ut ornare lectus sit. Quisque non tellus orci
-		ac. Blandit libero volutpat sed cras. Nec tincidunt praesent semper feugiat nibh sed pulvinar
-		proin gravida. Egestas integer eget aliquet nibh praesent tristique magna.
-	</p>
-</Layout>
+    <div>
+      <p class="m-0 mb-6">
+        Fareez is a Software Engineer with experience in full-stack development,
+        specializing in Flutter, Laravel, and .NET stack. He is currently
+        developing web systems and mobile applications, committed to delivering
+        high-quality, scalable, and maintainable software.
+      </p>
+      <p class="m-0 mb-6">
+        With a background in Mechatronics Engineering from IIUM, Fareez has a
+        keen interest in mobile app development, IoT systems, robotics, and
+        electronic projects. He is also passionate about DevOps, CI/CD, and
+        leveraging technology to build innovative solutions.
+      </p>
+      <p class="m-0">
+        Outside of work, I build and maintain personal projects, including Waktu
+        Solat app, etc. These projects give me room to explore ideas and work
+        across the whole development process. I'm particularly interested in
+        creating useful tools for everyday life, while improving how I write,
+        test, and deliver software.
+      </p>
+    </div>
+  </div>
+</Page>
