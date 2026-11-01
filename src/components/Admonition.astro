@@ -1,0 +1,76 @@
+---
+import {
+  IconAlertTriangle,
+  IconBulb,
+  IconAlertOctagon,
+  IconInfoCircle,
+  IconAlertCircle,
+  IconHelpCircle,
+} from "@tabler/icons-astro";
+
+interface Props {
+  type?: "warning" | "tip" | "caution" | "note" | "important" | "question";
+  title?: string;
+}
+
+const { type = "note", title } = Astro.props;
+const types = {
+  warning: {
+    label: "Warning",
+    Icon: IconAlertTriangle,
+    header: "bg-amber-50 text-amber-800",
+    border: "border-amber-200",
+  },
+  tip: {
+    label: "Tip",
+    Icon: IconBulb,
+    header: "bg-emerald-50 text-emerald-800",
+    border: "border-emerald-200",
+  },
+  caution: {
+    label: "Caution",
+    Icon: IconAlertOctagon,
+    header: "bg-rose-50 text-rose-800",
+    border: "border-rose-200",
+  },
+  note: {
+    label: "Note",
+    Icon: IconInfoCircle,
+    header: "bg-blue-50 text-blue-800",
+    border: "border-blue-200",
+  },
+  important: {
+    label: "Important",
+    Icon: IconAlertCircle,
+    header: "bg-violet-50 text-violet-800",
+    border: "border-violet-200",
+  },
+  question: {
+    label: "Question",
+    Icon: IconHelpCircle,
+    header: "bg-cyan-50 text-cyan-800",
+    border: "border-cyan-200",
+  },
+};
+const { label, Icon, header, border } = types[type];
+const heading = title ?? label;
+---
+
+<aside
+  aria-label={heading}
+  data-admonition={type}
+  class:list={[
+    "my-6 overflow-hidden rounded-lg border border-solid bg-white",
+    border,
+  ]}
+>
+  <div class:list={["flex items-center gap-2.5 px-4 py-2.5", header]}>
+    <Icon size={19} stroke={1.8} class="shrink-0 -translate-y-0.5" aria-hidden="true" />
+    <p class="m-0 text-sm leading-5 font-bold text-inherit">{heading}</p>
+  </div>
+  <div
+    class="px-4 py-3.5 text-[15px] leading-[1.65] text-zinc-600 [&_p]:m-0 [&_p+p]:mt-3 [&_a]:font-medium [&_a]:text-inherit [&_a]:underline [&_a]:underline-offset-3 [&_code]:bg-black/5"
+  >
+    <slot />
+  </div>
+</aside>

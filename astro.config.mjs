@@ -6,10 +6,27 @@ import { defineConfig, fontProviders } from 'astro/config';
 
 import tailwindcss from '@tailwindcss/vite';
 
+/** @type {import('astro').AstroIntegration} */
+const debugPages = {
+    name: 'debug-pages',
+    hooks: {
+        'astro:config:setup': ({ command, injectRoute }) => {
+            // Keep debug pages outside src/pages so builds cannot discover them.
+            if (command !== 'dev') return;
+            for (const page of ['admon', 'markdown']) {
+                injectRoute({
+                    pattern: `/debug/${page}`,
+                    entrypoint: `./src/debug/${page}.astro`,
+                });
+            }
+        },
+    },
+};
+
 // https://astro.build/config
 export default defineConfig({
     site: 'https://iqfareez.com',
-    integrations: [mdx(), sitemap()],
+    integrations: [mdx(), sitemap(), debugPages],
 
     fonts: [
         {
@@ -19,6 +36,14 @@ export default defineConfig({
             weights: [300, 400, 600, 700],
             styles: ['normal', 'italic'],
             fallbacks: ['Arial', 'sans-serif'],
+        },
+        {
+            provider: fontProviders.fontsource(),
+            name: 'Geist Mono',
+            cssVariable: '--font-geist-mono',
+            weights: [400, 700],
+            styles: ['normal'],
+            fallbacks: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
         },
         {
             provider: fontProviders.local(),

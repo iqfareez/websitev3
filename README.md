@@ -53,6 +53,11 @@ The `src/content/` directory contains "collections" of related Markdown and MDX 
 
 Any static assets, like images, can be placed in the `public/` directory.
 
+For sample **UI components** we can use, see list below:
+
+- Admonition: http://localhost:4321/debug/admon
+- Markdown: http://localhost:4321/debug/markdown
+
 ## Commands
 
 All commands are run from the root of the project, from a terminal:

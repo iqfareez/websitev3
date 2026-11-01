@@ -1,0 +1,14 @@
+---
+import { Content, frontmatter } from "./markdown.md";
+import Page from "../layouts/Page.astro";
+---
+
+<Page
+  title={frontmatter.title}
+  description={frontmatter.description}
+  subtitle="A reference for the site's Markdown typography and formatting."
+>
+  <div class="prose max-w-3xl [&_pre]:max-w-full [&_pre]:overflow-x-auto">
+    <Content />
+  </div>
+</Page>
