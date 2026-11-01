@@ -38,6 +38,14 @@ export default defineConfig({
             fallbacks: ['Arial', 'sans-serif'],
         },
         {
+            provider: fontProviders.fontsource(),
+            name: 'Geist Mono',
+            cssVariable: '--font-geist-mono',
+            weights: [400, 700],
+            styles: ['normal'],
+            fallbacks: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
+        },
+        {
             provider: fontProviders.local(),
             name: 'Atkinson',
             cssVariable: '--font-atkinson',
