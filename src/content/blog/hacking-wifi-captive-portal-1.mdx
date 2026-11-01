@@ -10,12 +10,10 @@ heroImage: '../../assets/blog/hack-wifi/meta-image-wifi-article.png'
 
 import Admonition from "../../components/Admonition.astro";
 
-export const basePath = import.meta.env.BASE_URL.replace(/\/?$/, "/");
-
 When building IoT projects, the quickest way to connect to the internet is by using our mobile hotspot.
 But, what if we want the project to be deployed somewhere else?
 For sure, it is not very convenient to put our phones together with the project.
-In my case, when we want to deploy <a href={`${basePath}projects/`}>the Parcel Safety Box project</a>,
+In my case, when we want to deploy [the Parcel Safety Box project](../../projects#university-projects),
 the only public Wi-Fi available is the campus Wi-Fi.
 
 <Admonition type="note" title="Note that">
@@ -262,5 +260,5 @@ sending messages via Telegram bot, and many more.
 
 Just in case you want to log out, you can use this [code](https://gist.github.com/iqfareez/2c684bfd42d96263a3d96bab8251a088).
 
-In the [Part 2](https://iqfareez.com/blog/hacking-wifi-captive-portal-2) of this article, we will authenticate wifi
+In the [Part 2](./hacking-wifi-captive-portal-2) of this article, we will authenticate wifi
 **quickly** using laptop or smartphone. Thank you.

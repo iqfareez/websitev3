@@ -16,7 +16,15 @@ Prefix internal links with the configured base path so they work when the site i
 const basePath = import.meta.env.BASE_URL.replace(/\/?$/, "/");
 ```
 
-Use `${basePath}blog/${post.id}/` for blog post links, for example, instead of root-relative `/blog/...` links.
+And then
+
+```astro
+<a href={`${basePath}about`}>About</a>
+```
+
+### Links between articles
+
+In Markdown and MDX article content, prefer standard Markdown links such as `[Part 2](./hacking-wifi-captive-portal-2)` instead of HTML or JSX `<a>` tags. Use this `./` convention for links between articles.
 
 ## Documentation
 
@@ -30,3 +38,7 @@ Consult these guides before working on related tasks:
 - [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
 - [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
 - [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+
+```
+
+```
