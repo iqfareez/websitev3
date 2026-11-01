@@ -51,22 +51,6 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
           padding-inline: 0;
         }
       }
-      .title {
-        margin-bottom: 1em;
-        padding: 1em 0;
-        text-align: center;
-        line-height: 1;
-      }
-      .title h1 {
-        margin: 0 0 0.5em 0;
-      }
-      .date {
-        margin-bottom: 0.5em;
-        color: rgb(var(--gray));
-      }
-      .last-updated-on {
-        font-style: italic;
-      }
     </style>
   </head>
 
@@ -82,20 +66,32 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
           }
         </div>
         <div class="prose">
-          <div class="title">
-            <div class="date">
-              <FormattedDate date={pubDate} />
+          <header class="mt-8 mb-12 text-left">
+            <h1
+              class="m-0 text-[clamp(28px,4vw,44px)] leading-[1.15] font-bold tracking-tight text-zinc-900"
+            >
+              {title}
+            </h1>
+            <div
+              class="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm text-zinc-500"
+            >
+              <span class:list={{ "opacity-75": Boolean(updatedDate) }}>
+                Published <FormattedDate date={pubDate} />
+              </span>
               {
                 updatedDate && (
-                  <div class="last-updated-on">
-                    Last updated on <FormattedDate date={updatedDate} />
-                  </div>
+                  <span class="inline-flex flex-wrap items-baseline gap-x-3">
+                    <span aria-hidden="true" class="text-zinc-300">
+                      ·
+                    </span>
+                    <span>
+                      Updated <FormattedDate date={updatedDate} />
+                    </span>
+                  </span>
                 )
               }
             </div>
-            <h1>{title}</h1>
-            <hr />
-          </div>
+          </header>
           <slot />
         </div>
       </article>
