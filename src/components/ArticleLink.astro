@@ -1,0 +1,18 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"a">;
+
+const { href, ...attributes } = Astro.props;
+const basePath = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+// Articles use Markdown links like ./other-post. On a URL ending in /,
+// the browser would resolve that as /blog/current-post/other-post (a 404).
+// Resolve these links under the configured base path and /blog/ so they
+// work even if a host or an incoming link adds a trailing slash.
+const resolvedHref =
+  typeof href === "string" && href.startsWith("./")
+    ? `${basePath}blog/${href.slice(2)}`
+    : href;
+---
+
+<a {...attributes} href={resolvedHref}><slot /></a>
