@@ -6,10 +6,25 @@ import { defineConfig, fontProviders } from 'astro/config';
 
 import tailwindcss from '@tailwindcss/vite';
 
+/** @type {import('astro').AstroIntegration} */
+const debugPages = {
+    name: 'debug-pages',
+    hooks: {
+        'astro:config:setup': ({ command, injectRoute }) => {
+            // Keep debug pages outside src/pages so builds cannot discover them.
+            if (command !== 'dev') return;
+            injectRoute({
+                pattern: '/debug/admon',
+                entrypoint: './src/debug/admon.astro',
+            });
+        },
+    },
+};
+
 // https://astro.build/config
 export default defineConfig({
     site: 'https://iqfareez.com',
-    integrations: [mdx(), sitemap()],
+    integrations: [mdx(), sitemap(), debugPages],
 
     fonts: [
         {

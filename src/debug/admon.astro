@@ -1,0 +1,146 @@
+---
+import { Code } from "astro:components";
+import Admonition from "../components/Admonition.astro";
+import Page from "../layouts/Page.astro";
+
+const mdxUsage = `import Admonition from "../../components/Admonition.astro";
+
+<Admonition type="note" title="Before you start">
+
+  You'll need a **valid username and password**.
+
+</Admonition>`;
+
+const astroUsage = `---
+import Admonition from "../components/Admonition.astro";
+---
+
+<Admonition type="note" title="Before you start">
+  <p>
+    You'll need a <strong>valid username and password</strong>.
+  </p>
+</Admonition>`;
+
+const examples = [
+  {
+    type: "warning",
+    text: "Disconnect the power before changing any wiring. The board may still be powered through USB.",
+  },
+  {
+    type: "tip",
+    text: "Use the built-in LED to show the connection status. It makes debugging much easier.",
+  },
+  {
+    type: "caution",
+    text: "Flashing this firmware will erase your saved credentials. Keep a backup before continuing.",
+  },
+  {
+    type: "note",
+    text: "You'll still need a valid username and password. This method signs in to the portal on your behalf.",
+  },
+  {
+    type: "important",
+    text: "Keep this tab open. You'll need the request payload when configuring the ESP32 in the next step.",
+  },
+  {
+    type: "question",
+    text: "Already connected, but still getting a redirect? Check whether your captive portal session has expired.",
+  },
+] as const;
+---
+
+<Page
+  title="Admonitions"
+  description="Development preview of the finalized admonition component."
+  subtitle="The six callout types used in the blog. Inspired by react-admonitions: https://www.npmjs.com/package/react-admonitions"
+>
+  <div
+    class="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]"
+  >
+    <div class="min-w-0 [&>aside:first-child]:mt-0 [&>aside:last-child]:mb-0">
+      {
+        examples.map(({ type, text }) => (
+          <Admonition type={type}>
+            <p>{text}</p>
+          </Admonition>
+        ))
+      }
+    </div>
+
+    <section
+      aria-labelledby="usage-title"
+      class="group min-w-0 rounded-xl border border-solid border-zinc-200 bg-white lg:sticky lg:top-6"
+    >
+      <div class="p-5">
+        <h2 id="usage-title" class="m-0 mb-2 text-xl leading-tight">
+          How to use it
+        </h2>
+        <p class="m-0 text-sm text-zinc-500">
+          Import the component, choose a type, and add your content.
+        </p>
+        <fieldset
+          class="m-0 mt-5 flex gap-1 rounded-lg border-0 bg-zinc-100 p-1"
+        >
+          <legend class="sr-only">Example format</legend>
+          {
+            [
+              { id: "mdx", label: "MDX" },
+              { id: "astro", label: ".astro" },
+            ].map(({ id, label }) => (
+              <label class="flex-1 cursor-pointer rounded-md px-3 py-1.5 text-center text-sm font-bold text-zinc-500 has-checked:bg-white has-checked:text-zinc-900 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-pink-500">
+                <input
+                  id={`admon-${id}`}
+                  type="radio"
+                  name="admon-usage"
+                  value={id}
+                  checked={id === "mdx"}
+                  aria-controls={`admon-${id}-example`}
+                  class="sr-only"
+                />
+                {label}
+              </label>
+            ))
+          }
+        </fieldset>
+      </div>
+
+      <div
+        class="border-0 border-y border-solid border-zinc-200 text-[13px] [&_pre]:m-0 [&_pre]:overflow-x-auto [&_pre]:rounded-none [&_pre]:p-4 [&_pre]:text-[13px] [&_pre]:leading-6"
+      >
+        <div
+          id="admon-mdx-example"
+          class="hidden group-has-[#admon-mdx:checked]:block"
+        >
+          <p
+            class="m-0 border-0 border-b border-solid border-zinc-100 px-4 py-2 font-mono text-xs text-zinc-500"
+          >
+            src/content/blog/example.mdx
+          </p>
+          <Code code={mdxUsage} lang="mdx" theme="github-light" />
+        </div>
+        <div
+          id="admon-astro-example"
+          class="hidden group-has-[#admon-astro:checked]:block"
+        >
+          <p
+            class="m-0 border-0 border-b border-solid border-zinc-100 px-4 py-2 font-mono text-xs text-zinc-500"
+          >
+            src/pages/example.astro
+          </p>
+          <Code code={astroUsage} lang="astro" theme="github-light" />
+        </div>
+      </div>
+
+      <div class="space-y-3 p-5 text-sm leading-relaxed text-zinc-500">
+        <p class="m-0">
+          <code>type</code> accepts warning, tip, caution, note, important, or question.
+          It defaults to note.
+        </p>
+        <p class="m-0">
+          <code>title</code> is optional. Leave it out to use the type’s label.
+        </p>
+        <p class="m-0 text-xs">The import path is relative to your file.</p>
+      </div>
+    </section>
+  </div>
+</Page>
