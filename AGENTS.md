@@ -8,6 +8,16 @@ astro dev --background
 
 Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
 
+## Base URL & Path
+
+Prefix internal links with the configured base path so they work when the site is hosted under a subdirectory. Example:
+
+```astro
+const basePath = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+```
+
+Use `${basePath}blog/${post.id}/` for blog post links, for example, instead of root-relative `/blog/...` links.
+
 ## Documentation
 
 Full documentation: https://docs.astro.build
