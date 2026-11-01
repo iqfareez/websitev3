@@ -35,7 +35,7 @@ for (const post of posts) {
                   <FormattedDate date={post.data.pubDate} />
                 </span>
                 <a
-                  class="min-w-0 text-blue-500 no-underline visited:text-[color-mix(in_srgb,var(--color-blue-500)_50%,#fafafa)]"
+                  class="min-w-0 text-(--accent) no-underline visited:text-[color-mix(in_srgb,var(--accent)_50%,var(--color-zinc-50))] hover:text-(--accent-dark)"
                   href={`${basePath}blog/${post.id}/`}
                 >
                   {post.data.title}

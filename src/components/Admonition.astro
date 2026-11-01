@@ -1,0 +1,24 @@
+---
+interface Props {
+  type?: "note" | "tip" | "important";
+  title?: string;
+}
+
+const { type = "note", title } = Astro.props;
+const styles = {
+  note: "border-blue-500 bg-blue-50",
+  tip: "border-green-600 bg-green-50",
+  important: "border-amber-600 bg-amber-50",
+};
+const labels = { note: "Note", tip: "Tip", important: "Important" };
+---
+
+<aside
+  class:list={[
+    "my-6 rounded-r border-l-4 border-solid p-4 *:last:mb-0",
+    styles[type],
+  ]}
+>
+  <p class="m-0 mb-2 font-bold">{title ?? labels[type]}</p>
+  <slot />
+</aside>
