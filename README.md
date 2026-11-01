@@ -56,6 +56,7 @@ Any static assets, like images, can be placed in the `public/` directory.
 For sample **UI components** we can use, see list below:
 
 - Admonition: http://localhost:4321/debug/admon
+- Markdown: http://localhost:4321/debug/markdown
 
 ## Commands
 

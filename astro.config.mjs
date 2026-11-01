@@ -13,10 +13,12 @@ const debugPages = {
         'astro:config:setup': ({ command, injectRoute }) => {
             // Keep debug pages outside src/pages so builds cannot discover them.
             if (command !== 'dev') return;
-            injectRoute({
-                pattern: '/debug/admon',
-                entrypoint: './src/debug/admon.astro',
-            });
+            for (const page of ['admon', 'markdown']) {
+                injectRoute({
+                    pattern: `/debug/${page}`,
+                    entrypoint: `./src/debug/${page}.astro`,
+                });
+            }
         },
     },
 };
