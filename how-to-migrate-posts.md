@@ -38,7 +38,7 @@ Map the old frontmatter to the current schema:
 | `date`    | `pubDate`             | Preserve publication date; normalize to quoted `YYYY-MM-DD`.                           |
 | `lastmod` | `updatedDate`         | Optional; preserve the actual revision date and normalize it.                          |
 | `images`  | `heroImage`           | Use the intended cover image, usually the first entry, with a relative asset path.     |
-| `layout`  | Remove                | Astro applies `BlogPost.astro` through the blog route.                                 |
+| `layout`  | `showHeroImage`        | Set `false` for `PostSimple` or `PostLayout`, and `true` for `PostBanner` (`postBanner`). Remove the old `layout` field; Astro applies `BlogPost.astro` through the blog route. |
 | `authors` | Remove                | The current collection has no author field or author rendering.                        |
 | `tags`    | Check current support | Existing migrated posts retain this field, but the current schema does not expose it.  |
 | `draft`   | Remove                | Ignore this field in the target frontmatter; delete it even when its value is `false`. |
@@ -46,6 +46,10 @@ Map the old frontmatter to the current schema:
 Do not replace the original publication or revision date with the migration date.
 
 For posts being migrated, remove the `draft` field from the target frontmatter.
+
+Preserve the original layout's cover visibility with the boolean `showHeroImage` field. Only banner layouts (`PostBanner` / `postBanner`) should display the cover above the article; explicitly set `showHeroImage: false` for `PostSimple` and `PostLayout`. If `showHeroImage` is omitted, the new collection defaults it to `true`. For any other source layout, inspect its implementation before choosing the flag.
+
+Keep `heroImage` even when `showHeroImage: false`: it still supplies the article's `og:image` metadata. The flag controls only the visible article cover, not social previews. `BlogPost.astro` passes `heroImage` to `BaseHead` independently of the visibility flag.
 
 Example target frontmatter:
 
@@ -56,6 +60,7 @@ description: "Original article summary."
 pubDate: "2022-08-14"
 updatedDate: "2025-03-04"
 heroImage: "../../assets/blog/article-images/cover.jpg"
+showHeroImage: false
 ---
 ```
 
@@ -72,7 +77,7 @@ Omit optional fields when the source does not provide them. A missing required d
 ![Original alt text](../../assets/blog/article-images/screenshot.jpg)
 ```
 
-5. Point `heroImage` at the copied cover image using the same relative path convention.
+5. Point `heroImage` at the copied cover image using the same relative path convention, even when the original layout calls for `showHeroImage: false`.
 6. Preserve GIF animations. Astro may generate animated WebP files; verify animation, duration, and looping rather than requiring identical frame counts.
 7. Keep remote images and their attribution links intact unless the user asks to download them. Distinguish external dependencies from copied local assets in validation.
 
@@ -133,7 +138,8 @@ Verify the generated output:
 
 - The migrated route exists at `dist/blog/<slug>/index.html` with the correct title, publication date, and optional update date.
 - The post appears in the year-grouped blog list, RSS feed, and sitemap.
-- Every generated local image URL points to an existing output file; counts match the source inventory, including the cover image.
+- Every generated local image URL points to an existing output file; counts match the source inventory. When `showHeroImage: false`, the cover must be absent from the article body but remain in `og:image`, with its generated asset present in the output.
+- Hero visibility matches the original layout: hidden for `PostSimple` and `PostLayout`, visible for `PostBanner` / `postBanner` when a cover exists. Posts without the new flag retain the default visible cover. Verify `og:image` uses the article's cover regardless of visibility.
 - GIF-derived media remains animated and retains its intended duration and looping.
 - Callouts, code examples, expandable sections, nested images, and Markdown formatting render correctly.
 - Article links and fragments resolve to existing pages and heading IDs. Check reciprocal links where applicable.
