@@ -1,0 +1,116 @@
+/* summary-details components in mdx and astro components. */
+
+.prose details {
+  margin-block: 1.25rem;
+  border: 1px solid #fbcfe8;
+  border-radius: 0.4rem;
+  background: white;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.prose details > summary {
+  position: relative;
+  display: block;
+  padding: 1rem 1.25rem 1rem 3rem;
+  border-radius: 0.35rem;
+  background: #fdf2f8;
+  color: #9d174d;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 700;
+  list-style: none;
+  cursor: pointer;
+}
+
+.prose details[open] > summary {
+  border-radius: 0.35rem 0.35rem 0 0;
+}
+
+.prose details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.prose details > summary::after {
+  content: "";
+  position: absolute;
+  left: 1.45rem;
+  /* Center on the first text line, including when the summary wraps. */
+  top: calc(1rem + 0.625rem);
+  width: 0.45rem;
+  height: 0.45rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-50%) rotate(-45deg);
+}
+
+.prose details[open] > summary::after {
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.prose details > summary:hover {
+  color: var(--accent-dark);
+}
+
+.prose details > summary:focus-visible {
+  outline: 2px solid var(--accent-dark);
+  outline-offset: 4px;
+}
+
+.prose details > :not(summary) {
+  margin: 1rem 1.25rem;
+  max-width: calc(100% - 2.5rem);
+}
+
+.prose details > :last-child:not(summary) {
+  margin-bottom: 1.25rem;
+}
+
+.prose details > pre {
+  overflow-x: auto;
+  box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .prose details > summary::after {
+    transition: transform 240ms ease;
+  }
+
+  /* Keep native toggling in browsers without transitions. */
+  @supports (interpolate-size: allow-keywords) and selector(details::details-content) {
+    .prose details {
+      interpolate-size: allow-keywords;
+    }
+
+    .prose details::details-content {
+      block-size: 0;
+      opacity: 0;
+      overflow: clip;
+      transition:
+        block-size 240ms ease,
+        opacity 240ms ease,
+        content-visibility 240ms allow-discrete;
+    }
+
+    .prose details[open]::details-content {
+      block-size: auto;
+      opacity: 1;
+    }
+  }
+}
+
+@media (max-width: 540px) {
+  .prose details > summary {
+    padding: 0.85rem 0.85rem 0.85rem 2.6rem;
+  }
+
+  .prose details > summary::after {
+    left: 1.05rem;
+    top: calc(0.85rem + 0.625rem);
+  }
+
+  .prose details > :not(summary) {
+    margin-inline: 0.85rem;
+    max-width: calc(100% - 1.7rem);
+  }
+}
