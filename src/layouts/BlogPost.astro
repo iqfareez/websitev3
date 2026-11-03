@@ -44,6 +44,24 @@ const {
         margin: auto;
         color: rgb(var(--gray-dark));
       }
+      .article-title {
+        font-size: clamp(2rem, 4vw, 3.25rem);
+      }
+      .prose :global(h2) {
+        font-size: clamp(1.625rem, 2.5vw, 2.125rem);
+      }
+      .prose :global(h3) {
+        font-size: clamp(1.375rem, 2vw, 1.75rem);
+      }
+      .prose :global(h4) {
+        font-size: 1.25rem;
+      }
+      .prose :global(h5) {
+        font-size: 1.1875rem;
+      }
+      .prose :global(h6) {
+        font-size: 1.125rem;
+      }
       @media (min-width: 640px) {
         main {
           padding-inline: 24px;
@@ -84,7 +102,7 @@ const {
         <div class="prose">
           <header class="mt-8 mb-12 text-left">
             <h1
-              class="m-0 text-[clamp(28px,4vw,44px)] leading-[1.15] font-bold tracking-tight text-zinc-900"
+              class="article-title m-0 leading-[1.15] font-bold tracking-tight text-zinc-900"
             >
               {title}
             </h1>
