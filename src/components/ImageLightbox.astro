@@ -1,0 +1,263 @@
+---
+import { IconX } from "@tabler/icons-astro";
+---
+
+<article-image-lightbox>
+  <dialog aria-label="Expanded image">
+    <button
+      class="close"
+      type="button"
+      aria-label="Close expanded image"
+      autofocus
+    >
+      <IconX size={24} stroke={1.8} aria-hidden="true" />
+    </button>
+    <div class="content">
+      <img alt="" />
+      <p class="caption" hidden></p>
+      <a class="image-link" hidden>View linked page</a>
+    </div>
+  </dialog>
+</article-image-lightbox>
+
+<style>
+  :global(.prose .expandable-image) {
+    display: inline-block;
+    width: fit-content;
+    max-width: 100%;
+    line-height: 0;
+    cursor: zoom-in;
+  }
+  :global(.prose img[data-expandable]) {
+    display: block;
+    max-width: 100%;
+    cursor: zoom-in;
+  }
+  :global(.prose img[data-expandable]:focus-visible) {
+    outline: 3px solid var(--accent);
+    outline-offset: 4px;
+  }
+  dialog {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0;
+    padding: 64px 24px 24px;
+    border: 0;
+    background: transparent;
+    color: white;
+  }
+  dialog[open] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  dialog::backdrop {
+    background: rgb(0 0 0 / 90%);
+    animation: lightbox-fade-in 220ms ease-out both;
+  }
+  dialog[open] .content {
+    animation: lightbox-image-in 220ms ease-out both;
+  }
+  dialog[open] .close {
+    animation: lightbox-fade-in 220ms ease-out both;
+  }
+  dialog.is-closing::backdrop,
+  dialog.is-closing .close {
+    animation: lightbox-fade-out 180ms ease-in both;
+  }
+  dialog.is-closing .content {
+    animation: lightbox-image-out 180ms ease-in both;
+  }
+  @keyframes lightbox-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes lightbox-image-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes lightbox-fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes lightbox-image-out {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    dialog::backdrop,
+    dialog.is-closing::backdrop,
+    dialog[open] .content,
+    dialog[open] .close {
+      animation: none;
+    }
+  }
+  .close {
+    display: grid;
+    place-items: center;
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgb(255 255 255 / 40%);
+    border-radius: 50%;
+    background: #18181b;
+    color: white;
+    cursor: pointer;
+  }
+  .close:focus-visible,
+  .image-link:focus-visible {
+    outline: 3px solid white;
+    outline-offset: 4px;
+  }
+  .content {
+    max-width: 100%;
+    text-align: center;
+  }
+  img {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: calc(100dvh - 180px);
+    margin: auto;
+    object-fit: contain;
+  }
+  .caption {
+    max-width: 70ch;
+    margin: 12px auto 0;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .image-link {
+    color: white;
+    font-size: 14px;
+    text-underline-offset: 3px;
+  }
+</style>
+
+<script>
+  class ArticleImageLightbox extends HTMLElement {
+    connectedCallback() {
+      const dialog = this.querySelector("dialog")!;
+      const expandedImage = dialog.querySelector("img")!;
+      const caption = dialog.querySelector<HTMLParagraphElement>(".caption")!;
+      const imageLink = dialog.querySelector<HTMLAnchorElement>(".image-link")!;
+      let previousOverflow = "";
+
+      const expand = (image: HTMLImageElement, trigger: HTMLElement) => {
+        if (dialog.open) return;
+        expandedImage.src = image.currentSrc || image.src;
+        expandedImage.srcset = image.srcset;
+        expandedImage.sizes = "100vw";
+        expandedImage.alt = image.alt;
+        caption.textContent = image.alt;
+        caption.hidden = !image.alt;
+        const link = image.closest("a");
+        imageLink.hidden = !link;
+        if (link) imageLink.href = link.href;
+        else imageLink.removeAttribute("href");
+        trigger.focus({ preventScroll: true });
+        previousOverflow = document.documentElement.style.overflow;
+        document.documentElement.style.overflow = "hidden";
+        dialog.showModal();
+      };
+
+      const close = async () => {
+        if (!dialog.open || dialog.classList.contains("is-closing")) return;
+        dialog.classList.add("is-closing");
+        await Promise.allSettled(
+          dialog
+            .getAnimations({ subtree: true })
+            .map((animation) => animation.finished),
+        );
+        dialog.close();
+      };
+
+      document
+        .querySelectorAll<HTMLImageElement>(".prose img")
+        .forEach((image) => {
+          const trigger: HTMLElement = image.closest("a") || image;
+          const wrapper = document.createElement("span");
+          wrapper.className = "expandable-image";
+          const imageElement = image.closest("picture") || image;
+          imageElement.before(wrapper);
+          wrapper.append(imageElement);
+          image.dataset.expandable = "";
+          image.title = "Click to expand";
+          trigger.setAttribute("aria-haspopup", "dialog");
+          trigger.setAttribute(
+            "aria-label",
+            image.alt ? `Expand image: ${image.alt}` : "Expand image",
+          );
+          if (trigger === image) {
+            trigger.tabIndex = 0;
+            trigger.setAttribute("role", "button");
+          }
+          const clickTarget = trigger === image ? wrapper : trigger;
+          clickTarget.addEventListener("click", (event) => {
+            // Keep modified clicks available for an image's original link.
+            if (
+              event.ctrlKey ||
+              event.metaKey ||
+              event.shiftKey ||
+              event.altKey
+            )
+              return;
+            event.preventDefault();
+            expand(image, trigger);
+          });
+          trigger.addEventListener("keydown", (event) => {
+            if (
+              event.key === " " ||
+              (event.key === "Enter" && trigger === image)
+            ) {
+              event.preventDefault();
+              expand(image, trigger);
+            }
+          });
+        });
+
+      dialog.querySelector("button")!.addEventListener("click", close);
+      dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) close();
+      });
+      dialog.addEventListener("cancel", (event) => {
+        event.preventDefault();
+        close();
+      });
+      dialog.addEventListener("close", () => {
+        dialog.classList.remove("is-closing");
+        document.documentElement.style.overflow = previousOverflow;
+        expandedImage.removeAttribute("src");
+        expandedImage.removeAttribute("srcset");
+      });
+    }
+  }
+
+  customElements.define("article-image-lightbox", ArticleImageLightbox);
+</script>
