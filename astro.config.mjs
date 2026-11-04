@@ -27,6 +27,9 @@ const debugPages = {
 export default defineConfig({
     site: 'https://iqfareez.com',
     integrations: [mdx(), sitemap(), debugPages],
+    redirects: {
+        '/gh': 'https://github.com/iqfareez?tab=repositories',
+    },
 
     fonts: [
         {

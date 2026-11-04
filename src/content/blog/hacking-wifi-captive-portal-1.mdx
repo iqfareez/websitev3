@@ -220,13 +220,13 @@ The code above will first connect to Wi-Fi.
 After a successful connection,
 it will make a POST request to the captive portal with your username & password to authenticate itself.
 
-To verify if the ESP32 is connected to the internet, you can make a request to any API, and see if it returns something. You could use this `https://iqfareez.com/api/hello` simple API for testing.
+To verify if the ESP32 is connected to the internet, you can make a request to any API, and see if it returns something. You could use this `https://iqfareez.com/api/hello.json` simple API for testing.
 
 Put this code in the `loop()` function:
 
 ```cpp
 HTTPClient http;
-http.begin("https://iqfareez.com/api/hello");
+http.begin("https://iqfareez.com/api/hello.json");
 int res = http.GET();
 
 Serial.println(res); // status code
