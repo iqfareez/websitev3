@@ -3,8 +3,8 @@
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig, fontProviders } from 'astro/config';
-
 import tailwindcss from '@tailwindcss/vite';
+import expressiveCode from 'astro-expressive-code';
 
 /** @type {import('astro').AstroIntegration} */
 const debugPages = {
@@ -26,7 +26,7 @@ const debugPages = {
 // https://astro.build/config
 export default defineConfig({
     site: 'https://iqfareez.com',
-    integrations: [mdx(), sitemap(), debugPages],
+    integrations: [expressiveCode(), mdx(), sitemap(), debugPages],
     redirects: {
         '/gh': 'https://github.com/iqfareez?tab=repositories',
     },
