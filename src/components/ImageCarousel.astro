@@ -1,0 +1,306 @@
+---
+import { Image, getImage } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import { IconChevronLeft, IconChevronRight } from "@tabler/icons-astro";
+
+interface Props {
+  id: string;
+  label: string;
+  images: (ImageMetadata | string)[];
+}
+
+const { id, label, images } = Astro.props;
+const thumbnails = await Promise.all(
+  images.map(async (image) =>
+    typeof image === "string"
+      ? image
+      : (await getImage({ src: image, width: 240, height: 180, fit: "cover" }))
+          .src,
+  ),
+);
+---
+
+<article-image-carousel
+  role="region"
+  aria-roledescription="carousel"
+  aria-label={label}
+>
+  <div class="viewport">
+    <div class="track" id={id} tabindex="0" aria-label={`${label} photos`}>
+      {
+        images.map((image, index) => (
+          <div
+            class="slide"
+            id={`${id}-slide-${index + 1}`}
+            role="group"
+            aria-roledescription="slide"
+            aria-label={`${index + 1} of ${images.length}`}
+          >
+            {typeof image === "string" ? (
+              <img
+                src={image}
+                alt={`Slide ${index + 1}`}
+                width="960"
+                height="720"
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <Image
+                src={image}
+                alt={`Slide ${index + 1}`}
+                width={960}
+                loading="lazy"
+              />
+            )}
+          </div>
+        ))
+      }
+    </div>
+    <div class="controls" hidden>
+      <button
+        type="button"
+        data-direction="-1"
+        aria-label="Previous photo"
+        aria-controls={id}
+        disabled
+      >
+        <IconChevronLeft size={20} stroke={1.8} aria-hidden="true" />
+      </button>
+      <button
+        type="button"
+        data-direction="1"
+        aria-label="Next photo"
+        aria-controls={id}
+      >
+        <IconChevronRight size={20} stroke={1.8} aria-hidden="true" />
+      </button>
+    </div>
+    <span class="status" aria-live="polite" aria-atomic="true"
+      >1 / {images.length}</span
+    >
+  </div>
+  <div class="thumbnails" aria-label="Choose a photo">
+    {
+      thumbnails.map((src, index) => (
+        <a
+          class="thumbnail"
+          href={`#${id}-slide-${index + 1}`}
+          data-slide={index}
+          aria-label={`Show slide ${index + 1}`}
+          aria-current={index === 0 ? "true" : "false"}
+          style={{ backgroundImage: `url("${src}")` }}
+        />
+      ))
+    }
+  </div>
+</article-image-carousel>
+
+<style>
+  article-image-carousel {
+    display: block;
+    min-width: 0;
+    margin-block: 1.5rem;
+  }
+  @media (min-width: 1280px) {
+    article-image-carousel {
+      width: 90%;
+      margin-inline: auto;
+    }
+  }
+  .viewport {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+  .track,
+  .thumbnails {
+    scrollbar-width: none;
+  }
+  .track::-webkit-scrollbar,
+  .thumbnails::-webkit-scrollbar {
+    display: none;
+  }
+  .track {
+    position: relative;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    border-radius: 8px;
+  }
+  .slide {
+    flex: 0 0 100%;
+    min-width: 0;
+    aspect-ratio: 4 / 3;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    overflow: hidden;
+  }
+  /* Article images gain a lightbox wrapper after page load. */
+  .track .slide :global(.expandable-image),
+  .track .slide :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+  .track .slide :global(img) {
+    object-fit: cover;
+    border-radius: 0;
+  }
+  .controls {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    pointer-events: none;
+  }
+  .controls[hidden] {
+    display: none;
+  }
+  button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(44px, 8vw, 64px);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: white;
+    font: inherit;
+    cursor: pointer;
+    pointer-events: auto;
+  }
+  button :global(svg) {
+    filter: drop-shadow(0 1px 3px rgb(0 0 0 / 70%));
+  }
+  button:hover:not(:disabled),
+  button:focus-visible {
+    background: rgb(0 0 0 / 25%);
+  }
+  button:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    button {
+      transition: background-color 180ms ease;
+    }
+  }
+  .status {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgb(0 0 0 / 55%);
+    color: white;
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: center;
+    pointer-events: none;
+  }
+  .thumbnails {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-block: 4px;
+  }
+  .thumbnail {
+    box-sizing: border-box;
+    flex: 0 0 clamp(64px, 12vw, 112px);
+    aspect-ratio: 4 / 3;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    background-size: cover;
+    background-position: center;
+  }
+  .thumbnail[aria-current="true"] {
+    border-color: var(--accent);
+  }
+  .track:focus-visible,
+  button:focus-visible,
+  .thumbnail:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: -3px;
+  }
+</style>
+
+<script>
+  class ArticleImageCarousel extends HTMLElement {
+    connectedCallback() {
+      if (this.dataset.ready) return;
+      this.dataset.ready = "true";
+      const track = this.querySelector<HTMLElement>(".track")!;
+      const thumbnails = [
+        ...this.querySelectorAll<HTMLAnchorElement>("[data-slide]"),
+      ];
+      const previous = this.querySelector<HTMLButtonElement>(
+        '[data-direction="-1"]',
+      )!;
+      const next = this.querySelector<HTMLButtonElement>(
+        '[data-direction="1"]',
+      )!;
+      const status = this.querySelector<HTMLElement>(".status")!;
+      let current = 0;
+
+      const update = (index: number) => {
+        current = Math.max(0, Math.min(thumbnails.length - 1, index));
+        previous.disabled = current === 0;
+        next.disabled = current === thumbnails.length - 1;
+        status.textContent = `${current + 1} / ${thumbnails.length}`;
+        thumbnails.forEach((thumbnail, i) =>
+          thumbnail.setAttribute("aria-current", String(i === current)),
+        );
+        const thumbnail = thumbnails[current];
+        const strip = thumbnail.parentElement!;
+        if (
+          thumbnail.offsetLeft < strip.scrollLeft ||
+          thumbnail.offsetLeft + thumbnail.offsetWidth >
+            strip.scrollLeft + strip.clientWidth
+        ) {
+          strip.scrollLeft = thumbnail.offsetLeft;
+        }
+      };
+      const select = (index: number) => {
+        index = Math.max(0, Math.min(thumbnails.length - 1, index));
+        update(index);
+        track.scrollTo({
+          left: index * track.clientWidth,
+          behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+            ? "instant"
+            : "smooth",
+        });
+      };
+
+      thumbnails.forEach((thumbnail, index) =>
+        thumbnail.addEventListener("click", (event) => {
+          event.preventDefault();
+          select(index);
+        }),
+      );
+      previous.addEventListener("click", () => select(current - 1));
+      next.addEventListener("click", () => select(current + 1));
+      track.addEventListener(
+        "scroll",
+        () => update(Math.round(track.scrollLeft / track.clientWidth)),
+        { passive: true },
+      );
+      track.addEventListener("keydown", (event) => {
+        if (event.target !== track) return;
+        if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+          event.preventDefault();
+          select(current + (event.key === "ArrowRight" ? 1 : -1));
+        }
+      });
+      this.querySelector<HTMLElement>(".controls")!.hidden = false;
+    }
+  }
+
+  customElements.define("article-image-carousel", ArticleImageCarousel);
+</script>
