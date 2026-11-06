@@ -47,6 +47,9 @@ const {
       .article-title {
         font-size: clamp(2rem, 4vw, 3.25rem);
       }
+      .prose :global(:is(h1, h2, h3, h4, h5, h6):not(.article-title)) {
+        margin-block-start: 2.5rem;
+      }
       .prose :global(h2) {
         font-size: clamp(1.625rem, 2.5vw, 2.125rem);
       }
