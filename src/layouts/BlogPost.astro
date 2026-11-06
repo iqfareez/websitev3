@@ -148,6 +148,12 @@ const {
           height: auto;
           margin-inline: auto;
         }
+        .prose :global(img[data-wide]),
+        .prose :global(.expandable-image:has(img[data-wide])) {
+          width: 100%;
+          max-width: 100%;
+          height: auto;
+        }
       }
       .prose :global(table .expandable-image),
       .prose :global(table img) {
@@ -206,5 +212,30 @@ const {
     </main>
     <ImageLightbox />
     <Footer />
+    <script>
+      // all images on widescreens are limited in width. But for wide images that will look
+      // weird. This script will make those image appear the same width as the content.
+      // Logic: Image that have width 1.8 greater than the height will consider as wide image.
+      // See https://github.com/iqfareez/websitev3/pull/5
+      document
+        .querySelectorAll<HTMLImageElement>(".prose img")
+        .forEach((image) => {
+          if (image.closest("table, article-image-carousel")) return;
+
+          const updateImageWidth = () => {
+            const width =
+              image.naturalWidth || Number(image.getAttribute("width"));
+            const height =
+              image.naturalHeight || Number(image.getAttribute("height"));
+            image.toggleAttribute(
+              "data-wide",
+              width > 0 && height > 0 && width >= 1.8 * height,
+            );
+          };
+
+          updateImageWidth();
+          image.addEventListener("load", updateImageWidth);
+        });
+    </script>
   </body>
 </html>
