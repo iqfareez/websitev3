@@ -1,0 +1,255 @@
+---
+title: Deploy Node-RED flows to the Cloud (Azure)
+pubDate: "2023-02-15"
+updatedDate: "2025-03-04"
+tags: ['node-red', 'azure', 'cloud', 'iot', 'tutorial']
+description: No more local server! Learn how to host your Node-RED flows in the cloud with Microsoft Azure
+showHeroImage: false
+heroImage: "../../assets/blog/nodered-azure/meta-nodered-azure.png"
+---
+
+import Admonition from "../../components/Admonition.astro";
+import publicIpScreenshot from "../../assets/blog/nodered-azure/azure-vm-public-ip.png";
+
+In this tutorial, we will deploy Node-RED flows we've created [before](./get-started-on-iot-with-nodered-esp32) to
+the cloud using [Microsoft Azure](https://azure.microsoft.com/en-us). By hosting our Node-RED flows in the cloud,
+we can control remotely and access the data from anywhere. This guide will take you step-by-step through the process
+of deploying your Node-RED flows to Azure, and provide you with the knowledge and skills to start building your
+own cloud-based IoT solutions.
+
+## Prerequisites
+
+- SSH Client - Eg: [PuTTY](https://www.putty.org/)
+- Microsoft Azure account
+
+<Admonition type="tip">
+
+Great news for students, register for the Azure account as [student](https://azure.microsoft.com/en-us/free/students/) to claim the free [$100 credit](https://twitter.com/iqfareez/status/1620274582400954370?s=20&t=H302GPqXBl3cTJlAznxnrg).
+
+</Admonition>
+
+## Create a new Virtual Machine (VM) instance
+
+A virtual machine is basically a computer that lives in Azure infrastructure. Open [Azure portal](https://portal.azure.com/#home) and click on **Virtual Machine**.
+
+![Azure Virtual Machine selector](../../assets/blog/nodered-azure/azure-portal-vm.png)
+
+Click on Create > **Azure virtual machine** on the dropdown menu.
+
+![Create Azure VM](../../assets/blog/nodered-azure/create-azure-vm.png)
+
+In the Create a virtual machine form, fill in the particulars. Below are some important info you need to fill.
+
+| Item                  | Description                                                                                                                                                                                                                                                                                                                                                       |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Resource group        | Create new or select existing resources                                                                                                                                                                                                                                                                                                                           |
+| Virtual machine name  | Give any name. Eg: `my-node-red-vm`                                                                                                                                                                                                                                                                                                                               |
+| Image                 | `Ubuntu Server 20.04 LTS` (Ubuntu 18.04 will cause some issues when installing node) ![Select Ubuntu Server 20.04](../../assets/blog/nodered-azure/ubuntu-server-2004.png)                                                                                                                                                                                              |
+| Size                  | The [docs](https://nodered.org/docs/getting-started/azure) suggest `A1 Basic`, but I couldn't find it. So, I'll go with `Standard_B1s`. _Keep in mind that Node.js operates on a single thread, so having multiple cores in a Node-RED instance will not bring any advantage._ ![Azure VM Sizes and pricing](../../assets/blog/nodered-azure/azure-select-vm-size.png) |
+| Administrator account | You can leave it as default ![Azure Administrator account](../../assets/blog/nodered-azure/azure-administrator-account.png)                                                                                                                                                                                                                                            |
+| Inbound port rules    | Leave it as default ![Azure Inbound Rules](../../assets/blog/nodered-azure/azure-inbound-rules.png)                                                                                                                                                                                                                                                                    |
+
+Next, go to the **Networking tab**.
+
+![Networking tab](../../assets/blog/nodered-azure/networking-tab.png)
+
+In the **NIC network security group**, change the option from Basic to **Advanced**. Then, in the
+**Configure network security group**, click on <kbd>Create new</kbd>.
+
+![NIC Advanced option](../../assets/blog/nodered-azure/nic-advanced.png)
+
+Click on <kbd>+ Add an inbound rule</kbd>. Set the value as follows:
+
+| Item                    | Values                          |
+| ----------------------- | ------------------------------- |
+| Destination port ranges | `1880`                          |
+| Protocol                | TCP                             |
+| Priority                | `1010`                          |
+| Name                    | Any name. Eg: `node-red-editor` |
+
+Click <kbd>Add</kbd>. You should see your new rule is added to the **Inbound rules**. Click on <kbd>OK</kbd>.
+
+Then, click on <kbd>Review + create</kbd> to finalize your VM creation.
+
+![Azure review](../../assets/blog/nodered-azure/azure-review-create.png)
+
+It will take a moment to validate the information. Once it's done, click on <kbd>Create</kbd>. A dialog **Generate new key pair**
+should pop out to let you download your private key. Go ahead and click on the <kbd>Download private key and create
+resources</kbd>.
+
+![Azure download key pair](../../assets/blog/nodered-azure/azure-validation-passed-key-pair.png)
+
+A `.pem` file will be downloaded, and the Azure deployment worker will start kicking in to start your VM deployment. You can see the progress from
+the notification panel. Once it's done, click on <kbd>Go to resource</kbd> to view your freshly created VM.
+
+Then, go to **Connect**, and copy the `<username>@<public ip address>` from the example command. For example, mine is
+`azureuser@20.115.54.38`.
+
+![Azure VM Connect SSH](../../assets/blog/nodered-azure/azure-vm-connect-ssh.png)
+
+## Accessing your VM's Shell
+
+### Key conversion
+
+<Admonition type="note">
+
+As soon as I finish writing this tutorial, I realized that you can connect to the VM's shell by just
+using PowerShell on Windows (on Linux/MacOS, I know they have CLI ssh). Demo video
+[here](https://youtu.be/un-MObQ5_Bo).
+
+</Admonition>
+
+We'll be using PuTTY to access your VM. But, first, we are first going to convert the downloaded `.pem` file into something that
+PuTTY can understand. Open **PuTTYgen** to get started.
+
+![PuTTY gen](../../assets/blog/nodered-azure/puttygen-start-menu.png)
+
+In the PuTTYgen window, click on Conversion > Import key. Import the `.pem` file we've downloaded from the Azure portal before.
+PuTTYgen should be able to read it.
+
+Then, click <kbd>Save private key</kbd>.
+
+![Putty save private key](../../assets/blog/nodered-azure/putty-save-private-key.png)
+
+A warning dialog may appear, just click <kbd>Yes</kbd> to proceed. Save it anywhere on your computer. Note that the
+converted file will be saved as `.ppk`.
+
+You can now close PuTTYgen.
+
+### Establishing connection
+
+Now, open the main PuTTY app. Click on Connection > SSH > Auth > Credentials.
+
+In the **Private key file for authentication**, browse the generated `.ppk` file we've generated before.
+
+![PuTTY SSH auth](../../assets/blog/nodered-azure/putty-config-ssh.png)
+
+<Admonition type="note">
+
+It is also possible to generate the key pair using PuTTY, and then give your public key to the VM.
+Read more [here](https://help.thorntech.com/docs/sftp-gateway-azure/azure-ssh-using-putty/).
+
+</Admonition>
+
+Go back to **Session**, in the **Host name** textbox, paste the `<username>@<public ip address>` that we've copied from the Azure
+portal before. Leave other settings as default and click on <kbd>Open</kbd>.
+
+![Putty init session](../../assets/blog/nodered-azure/putty-config-session.png)
+
+A warning dialog might appear, click on <kbd>Accept</kbd> to proceed.
+
+<Admonition type="tip">
+
+You may want to save the PuTTY session, so next time you want to access the Shell, just load the
+session from the disk
+
+</Admonition>
+
+PuTTY will connect you to the Azure VM. Within a few seconds, BOOM! 💥. We've gained access
+to our VM's Shell. Congratulations, you are now a [hacker](https://www.meme-arsenal.com/memes/31a7b7745fb9c08b9db9bb1e981df25f.jpg).
+
+You can verify it by typing the command `uname -a` to get the OS information.
+
+![putty Uname Azure](../../assets/blog/nodered-azure/putty-uname.png)
+
+## Install Node-RED
+
+First, install the [recommended](https://nodered.org/docs/faq/node-versions) version of Node on the machine.
+
+```bash
+curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+sudo apt-get install -y nodejs build-essential
+```
+
+Then, install Node-RED
+
+```bash
+sudo npm install -g --unsafe-perm node-red
+```
+
+## Open Node-RED
+
+Now, Node-RED is ready to be started. Run:
+
+```bash
+node-red
+```
+
+![Node RED started](../../assets/blog/nodered-azure/console-node-red.png)
+
+After it has been started, open your **browser** and go to `<public ip address>:1880`. For example, mine is `20.115.54.38:1880`.
+
+<Admonition type="tip">
+
+You can find your public IP address from the Azure Portal (in <a href={publicIpScreenshot.src}>here</a>) or using a command like [here](https://stackoverflow.com/a/34567038/13617136)
+
+</Admonition>
+
+With that, you now have the Node-RED **running** on your Azure cloud infrastructure 🎉.
+
+![NodeRED on cloud Azure](../../assets/blog/nodered-azure/node-red-welcome.png)
+
+At this point, you already can start to design your flows and can deploy instantly in the cloud. But, if you already have developed
+flows before this locally, why not just import the flows to the Azure VM? Continue reading...
+
+## Import existing flows to Node-RED
+
+Before we proceed, let's define:
+
+- Local Node-RED: Node-RED instance that we run on our local machine
+- Cloud Node-RED: Node-RED instance that we've just deployed to the Azure VM
+
+<Admonition type="note">
+
+The steps outlined here are similar to when you want to transfer the Node-RED flows from one machine
+to another
+
+</Admonition>
+
+We can create new flows, but in this article, I will reuse the [flows.json](https://gist.github.com/iqfareez/80a9c3ae246ffcbcf58dc2ea6c4cb115) that we have created from the [previous article](./get-started-on-iot-with-nodered-esp32#conclusion).
+
+Then, we'll need to list out the palettes used in the current flows because we'll need to install them. So, on the Local Node-RED > Menu > Manage Palettes. Take notes of the installed palettes. In my case, I only have one additional palette: `node-red-dashboard`.
+
+![Nodered palettes installed](../../assets/blog/nodered-azure/local-node-red-palettes.png)
+
+Now, back to Cloud Node-RED, click on Menu > Manage Palettes > Install to install all palettes you need.
+
+Then, click on Menu > Import. You can paste the JSON content or import the `.json` file. Then, click on <kbd>Import</kbd>.
+
+![Nodered import json dialog](../../assets/blog/nodered-azure/nodered-import-json.png)
+
+The imported flow will look the same as your local Node-RED's flow.
+
+![Imported flow](../../assets/blog/nodered-azure/node-red-imported.png)
+
+Finally, hit <kbd>Deploy</kbd> to save and deploy the flows.
+
+Open the dashboard UI, connect ESP32 like we did before and the result is something similar below:
+
+<video src="https://i.imgur.com/aQmba1Q.mp4" controls autoplay muted playsinline preload="metadata" style="display: block; width: 100%; max-width: 640px; height: auto; margin: 1.5rem auto;">
+  <a href="https://i.imgur.com/aQmba1Q.mp4">Watch the demo video</a>
+</video>
+
+Notice that there are a few milliseconds delay between ESP32 and the Node-RED dashboard. Perhaps because we are using a free public
+mqtt broker, so the connection speed is throttled.
+
+<Admonition type="important" title="shameless plug">
+
+I made the Serial Monitor application that you see above. It is called **SeriLink**. Learn more
+[here](https://github.com/iqfareez/SeriLink).
+
+</Admonition>
+
+## Concluding remarks
+
+That's it. You now can continue to develop your flow on the cloud and deploy it right
+away so that you, or anyone can access it. The process is long, but easy to understand, right? 😉
+
+Remember to watch out for your Azure usages & quotas to avoid extra charges.
+
+You may ask, how do I want to do something similar like this using AWS? IMO, the process may be similar here and there. Just try that out. If I have time,
+I want to make a YouTube tutorial InshaAllah.
+
+## References
+
+- https://portal.azure.com/

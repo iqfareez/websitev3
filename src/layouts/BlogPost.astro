@@ -62,6 +62,52 @@ const {
       .prose :global(h6) {
         font-size: 1.125rem;
       }
+      .prose :global(table) {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+        margin-block: 1.5rem;
+        font-size: 16px;
+        line-height: 1.65;
+      }
+      .prose :global(th),
+      .prose :global(td) {
+        padding: 14px 18px 14px 0;
+        vertical-align: top;
+        overflow-wrap: anywhere;
+      }
+      .prose :global(thead th) {
+        padding-top: 6px;
+        border-bottom: 2px solid var(--color-pink-600);
+        color: var(--color-zinc-600);
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .prose :global(tbody th),
+      .prose :global(tbody td) {
+        border-bottom: 1px solid var(--color-zinc-200);
+      }
+      .prose :global(tbody > tr > :first-child) {
+        font-weight: 700;
+      }
+      .prose
+        :global(
+          table:has(thead tr > :nth-child(2):last-child) tr > :first-child
+        ) {
+        width: 31%;
+      }
+      .prose :global(table code) {
+        padding: 3px 5px;
+        border-radius: 4px;
+        background: #f1f1f4;
+        color: var(--color-zinc-700);
+        font-size: 0.82em;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+      }
+      .prose :global(table em) {
+        color: var(--color-zinc-600);
+      }
       @media (min-width: 640px) {
         main {
           padding-inline: 24px;
@@ -70,6 +116,21 @@ const {
       @media (max-width: 720px) {
         main {
           padding-block: 1em;
+        }
+      }
+      @media (max-width: 480px) {
+        .prose :global(table) {
+          font-size: 15px;
+        }
+        .prose :global(th),
+        .prose :global(td) {
+          padding: 12px 10px 12px 0;
+        }
+        .prose
+          :global(
+            table:has(thead tr > :nth-child(2):last-child) tr > :first-child
+          ) {
+          width: 35%;
         }
       }
       @media (min-width: 1280px) {
@@ -84,6 +145,16 @@ const {
           height: auto;
           margin-inline: auto;
         }
+      }
+      .prose :global(table .expandable-image),
+      .prose :global(table img) {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+      }
+      .prose :global(table .expandable-image) {
+        margin: 14px 0 0;
       }
     </style>
   </head>
