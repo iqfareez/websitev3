@@ -1,0 +1,222 @@
+---
+title: 'My final year project: A journey & post mortem'
+pubDate: "2023-11-27"
+tags: ['AR', 'navigation', 'unity', 'hloc']
+description: Finished just-in-time. I wish I had more time to focus on my FYP with less commitment on other things
+heroImage: "https://res.cloudinary.com/iqfareez-cloud/image/upload/v1756848456/website/fyp%20ar%20navigation/AR_navigation_blog_post_meta_tujj2f.png"
+showHeroImage: false
+---
+
+import Admonition from "../../components/Admonition.astro";
+
+**This post was originally written in somewhere in 2023 but never published. Actual published date is 9/2025, but the post date is backdated to 11/2023 (my convocation ceremony day), just to keep the blog post arrangement according to the timeline**
+___
+
+When the list of final year project (FYP) titles was released for us to choose from, several options caught my interest. However, the title below particularly stood out to me. Given my inclination towards software development, I thought this project would be a great fit.
+
+![Fyp released title my title](../../assets/blog/fyp-ar-navigation/fyp-my-title-list.png)
+
+<Admonition type="tip">
+
+For mechatronics juniors, [click here](https://docs.google.com/spreadsheets/d/1m3WvIcbPspN9yIdeG3P7v3xT2gXILNqg/edit?usp=sharing&ouid=100112357446104260446&rtpof=true&sd=true) to view the list of FYP titles during my time for your reference (Lecturer's names and emails are redacted for privacy)
+
+</Admonition>
+
+After further meetings with my supervisor, the requirements were refined as follows:
+
+- Develop a **mobile application using Unity** with AR Foundation for the navigation system.
+- Localization system using **natural landmark detection** - Visual based without the use of markers like QR codes or similar.
+
+## Past projects
+
+One student from last year (2021/2022) FYP, named Hidayat Sohif, had done a similar project, but with different objectives (See [Post 1](https://www.linkedin.com/posts/azharmohdibrahim_augmentedreality-indoornavigation-fuzzylogic-activity-7023879916509163520-MFKK?utm_source=share&utm_medium=member_desktop) & [Post 2](https://www.linkedin.com/posts/azharmohdibrahim_koe-iium-activity-7051446897596645376-bdsY?utm_source=share&utm_medium=member_desktop)).
+The navigation system is quite similar, but the localization system is different. He used QR codes as markers for the localization system, whereas I'm using features that already exist in the building. See [types of AR navigation](#types-of-ar-navigation).
+
+![Screenshot of Hidayat Sohif's work](../../assets/blog/fyp-ar-navigation/screenshot-hidayat-sohif-AR.png)
+
+I also found a good working demo of [indoor navigation with AR in a hospital](https://youtu.be/CGphw9r__5k) by [Joshua Drewlow](https://www.linkedin.com/in/joshua-drewlow/). He
+explained greatly the [development process](https://www.youtube.com/playlist?list=PLcYgptwJHxUE7Q9ymWEX0zDs3SDgMarxu). I can follow his methods right? Haha, no, because they used
+[Vuforia SDK](https://developer.vuforia.com/) with a 3D camera to map the environment, which I don't have and it costs a lot of $$$.
+
+After conducting thorough Google searches, I was delighted to discover that my chosen project was relatively uncommon and hadn't been extensively explored by others before. But the trend is increasing, more and more people are interested in developing AR navigation systems.
+
+## Types of AR navigation
+
+Generally, there are two types of navigation, which are:
+
+- **Location-based** navigation - using GPS
+- **Vision/Visual-based** navigation - using camera
+
+My project is targeted to be used within/inside a building, so GPS is not suitable for this project since the walls and building structure will disrupt the GPS signal. It is also crucial to ensure the position is accurate within 1-2 meters, which is hard to obtain using GPS. So, a suitable option to use indoors is vision-based navigation.
+
+In visual based, there are another two types of localization.
+
+- **Marker-based** - Using markers like QR code, AR tags, etc.
+- **Markerless** - Using features that are already exist in the building.
+
+![markerbased vs markerless example](../../assets/blog/fyp-ar-navigation/markerbased-vs-markerless-comparison.png)
+
+We are choosing markerless detection using natural landmark detection. It is more convenient since we don't need to put markers everywhere, but also quite challenging compared
+to marker-based detection.
+
+So far so good, I was excited to start the project. We were given two semesters (14 weeks each) to complete the project. I thought it was enough time to complete the project. Let's start!
+
+## In semester 1
+
+### Research & data collection
+
+I first learnt Unity about 2-3 years ago from this moment. I'm not too worried about learning Unity for my FYP as I quite understand the basics of it. This
+gives me a head start compared to my other friends who are not familiar with Unity. It's just that I have totally **no idea** how to
+implement AR in Unity.
+
+AR is not my expertise nor my interest. I have never done any AR projects before. So I looked everywhere, i.e. Reddit, StackOverflow, journal sites, YouTube and so much
+more to get the general idea. [AR Foundation Samples](https://github.com/Unity-Technologies/arfoundation-samples) repo is a great way to start and learn. But, it is not easy to understand.
+
+To narrow the scope, I focused on the KOE Building Block E1, Level 2. I began collecting image data from several pre-selected landmarks within the building to develop the localization model. I captured images of each landmark from various angles and distances to ensure a diverse dataset.
+
+![fyp-image-data-collection](../../assets/blog/fyp-ar-navigation/fyp-raw-data-collection.png)
+
+After that, I looked for a tool/algorithm to train the data. I had the idea to use PyTorch or TensorFlow, like a normal image classification project. But, upon further research, I found a method called [Hierarchical Localization](https://github.com/cvg/Hierarchical-Localization) to localize the image and predict where the image is. It sounded like a suitable method for my AR Navigation project.
+
+I won't go into details on how the Hierarchical Localization works, but in short, it uses two algorithms, [SuperPoint](https://arxiv.org/abs/1712.07629) and [SuperGlue](https://psarlin.com/superglue/). SuperPoint is used to extract features from the image, while SuperGlue is used to match the features from the image to the map.
+
+![HL pipeline](https://github.com/cvg/Hierarchical-Localization/raw/master/doc/hloc.png)
+
+The project provides sample code and even a Google Colab script to demonstrate Hierarchical Localization. I yoinked the code and ran it on my own image data. It works and it looks promising. So that's for the **localisation system** part.
+
+To build a simple POC of the navigation system in the app, I started by building a scaled model of one level of the KOE building. I have obtained the floor plan from another source, and I rebuilt the model using Autodesk Revit. Autodesk Revit is a powerful tool for building information modeling that allows for precise architectural design and visualization. I might be overkill with my choice but as long as it works, right?
+
+In short, I turn this:
+
+![Floor plan image](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1756612251/website/fyp%20ar%20navigation/Screenshot_2025-08-31_at_11.50.42_AM_sk6pc7.png)
+
+Into this:
+
+![Revit floor plan](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1756611536/website/fyp%20ar%20navigation/E1-L2-new.rvt_2_ltlkeu.png)
+
+And then, the model is imported into Unity. That will provide the base starting point into how I'll shape the app to work with the navigation system.
+
+![Unity screen floor plan game development](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1756612622/website/fyp%20ar%20navigation/screenshot-unity-game-floorplan-model_qtaszg.jpg)
+
+After this point, I was slowly making progress on finishing the report (part 1) and presentation slides.
+
+### Presentation
+
+Still completely unclear what I wanted or needed to do, I just threw whatever I thought was suitable
+for the presentation slides. Not much I could share about the project progress aside from the research and data collection I did so far. Compared
+to my colleagues, I felt like I was quite behind in terms of progress, but I wasn't too worried (yeah it's weird, I know).
+
+[![fy1 slide pp](../../assets/blog/fyp-ar-navigation/presentation-fyp1-pp.png)](https://www.slideshare.net/MuhammadFareezIqmal/fyp1-presentation-development-of-interactive-turnbyturn-navigation-in-kulliyyah-of-engineeringpdf)
+
+On week 15 of the semester, we had a presentation session for FYP 1. Hoping for best and with tawakkal, I presented my project. The presentation went well (at least in my opinion).
+
+> You're the best presenter I have today
+
+Upon concluding my presentation, to my pleasant surprise, one of the examiners commended me for delivering the best presentation of the day _(See image below, first image from left)_. As I was the final presenter during the FYP1 session, receiving such praise from him made me immensely proud. Haha, it was truly a delightful moment! (Of course, I'm not the best of all, it's just coincidentally & relatively better than the persons before me)
+
+![fyp1-whatsapp-screenshot](../../assets/blog/fyp-ar-navigation/fyp-screenshots-kawan.png)
+
+Then of course, there was the 'sesi bantai-membantai' with the examiners (basically it's just a QnA session with some spices 🌶️️), but Alhamdulillah I was able to answer it quite well.
+
+### Continue the prototype
+
+I found this [YouTube tutorial](https://youtube.com/playlist?list=PLOIYTfRd0Ho7iOI_cnUZxXK6KiCFGhU1s) on how to develop basic navigation in AR. His video is great, demonstrating how to navigate from A to B using QR code as its localization method. So, below is the early test video of the prototype I made after referencing the tutorial and other sources.
+
+<video src="https://i.imgur.com/HqzGfVK.mp4" controls autoplay muted playsinline preload="metadata" style="display: block; width: 100%; max-width: 640px; height: auto; margin: 1.5rem auto;">
+  <a href="https://i.imgur.com/HqzGfVK.mp4">Watch the demo video</a>
+</video>
+
+Hurmm.. Seems like it doesn't align with the room. And even worse, it directed me to the
+window like it was asking me to jump off. 😂😂
+
+<video src="https://i.imgur.com/EHLXYfV.mp4" controls autoplay muted playsinline preload="metadata" style="display: block; width: 100%; max-width: 640px; height: auto; margin: 1.5rem auto;">
+  <a href="https://i.imgur.com/EHLXYfV.mp4">Watch the demo video</a>
+</video>
+
+I tried testing the prototype outside my room, but unfortunately, something wasn't working correctly. The main struggle was getting the app to accurately track the camera position and point cloud data. In AR navigation, reliable camera tracking is crucial for aligning virtual paths with the real environment. If the tracking drifts or loses accuracy, the navigation cues can become misaligned, leading to confusing or unusable results.
+
+![Unity remote](../../assets/blog/fyp-ar-navigation/unity-remote-yes-phone.jpg)
+(***Illustrative image:*** Unity Remote is an app to preview the game on the Device, without require full compilation)
+
+Due to my involvement in other activities such as studying and various commitments*, I wasn't able to dedicate as much time to the project during the semester. As shown in the screenshot, there was a period when I didn't open the project for about three months. When I finally resumed work, it was just a week before submission, often when the deadline motivates the most progress. I would have appreciated having more time to focus on this project.
+
+\* The commitments in question include organizing a Flutter [workshop](https://github.com/LapanApps#workshop1-8-jam-8-apps-workshop), participating in a competition (Robocon 2022), one [freelance](https://github.com/MasjidTV/masjidTV-waktusolat) project and my academic workload.
+
+![Unity dah 3 bulan tak bukak project](../../assets/blog/fyp-ar-navigation/unity-3bulan-screenshot.png)
+
+Reflecting on my experience in semester 1, I realized that I had **overestimated** my own abilities, the amount of time I had, and what I could realistically achieve within the semester. I thought my prior knowledge and skills would be enough to carry me through, but the reality was much more challenging than expected. I also **underestimated** how much my other commitments would impact my progress. This taught me the importance of honest self-assessment, better time management, and setting realistic expectations for myself moving forward.
+
+## In semester 2
+
+When entering semester 2, I realized that I needed to complete the project in 15 weeks no matter what. So, I set a goal to **at least** touch the project once a week.
+
+Well, guess what? Despite my best intentions, the project ended up untouched for over two months. That's more than 10 weeks vanished into the void! 🤡 So, there's not much I can show here.
+
+Some addition that I add to the app is the bearing/compass indicator. This will make help the user to know which direction they are facing. Some video of my testing:
+
+<video src="https://i.imgur.com/KJR3tdq.mp4" controls autoplay muted playsinline preload="metadata" style="display: block; width: 100%; max-width: 640px; height: auto; margin: 1.5rem auto;">
+  <a href="https://i.imgur.com/KJR3tdq.mp4">Watch the demo video</a>
+</video>
+
+This is me two days before submitting the FYP report (with 1 week left for the final presentation). At that time, I had just finished wiring up the server side and was testing the endpoint using the app.
+
+![AR Server codespace](../../assets/blog/fyp-ar-navigation/ar-server-codespace-construction.png)
+
+GitHub Codespaces was my quick hack to have my server instance available online, so I didn't have to rent a VPS and configure everything from scratch. At that time, you could create a Codespace with a [GPU](https://docs.github.com/en/enterprise-cloud@latest/codespaces/developing-in-a-codespace/getting-started-with-github-codespaces-for-machine-learning#configuring-nvidia-cuda-for-your-codespace). However, one limitation it had was that it would halt the server when inactive, so I needed to always keep it open to ensure the server was online while I did field testing.
+
+![tablet running github codespace](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1756020876/website/fyp%20ar%20navigation/IMG_20230613_083147_ibx1nj.jpg)
+
+Here is the results that I'm able to achieve: https://youtu.be/rnIUBIEBne0
+
+Looking back, I am truly grateful that during those final, hectic days leading up to submission, I managed to stay healthy and avoid any unexpected setbacks. Despite the stress and pressure, nothing major went wrong (e.g. no sudden illnesses, no technical disasters, and no last-minute emergencies). It was a relief to be able to focus fully on wrapping up the project without any additional obstacles getting in the way.
+
+On the day of the presentation, I was able to present quite well, and the examiners praised my project's achievements. However, they also commented on some aspects, particularly regarding the localization results. Below are the real questions asked by the examiners during the presentation that I can recall:
+
+1. Using your project, I can only go from and to the destinations that have been listed, right?
+1. How do you know that the user is on the correct path?
+1. Is the navigation path shown the optimized shortest path?
+1. Can I navigate between different floors?
+1. How is your project different from [Hidayat Sohif's project](#past-projects)?
+1. etc.
+
+I was able to answer all the questions asked, because I knew what I was doing.
+
+## Future work
+
+While this project has significant potential for further development and refinement toward production readiness, I do not plan to continue working on it at this time. If you want to build a similar project like this one, I've put up some suggestions below.
+
+If time is critical, i.e. you don't want to spend much time developing the localization system, then you can use
+an AR navigation SDK out there, it's just that you need a big capital to use it. Below are some examples:
+
+- [Vuforia Engine](https://developer.vuforia.com/)
+- [Wikitude](https://www.wikitude.com/showcase/wikitude-navigation/)
+- [Unity Mars](https://unity.com/products/unity-mars)
+
+If you have time & resources, then you can continue my project by improving the overall system. Here are my suggestions:
+
+- Add more landmarks to the localization system
+- Improve the speed of the localization system (needs changes in both code and hardware)
+- Add accessibility features (i.e. read out the instruction "turn left", "turn right", etc)
+- Add more features to the app (i.e. search for destination, etc)
+- etc.
+
+Some more advanced improvements I could think of:
+
+- Employ WiFi access points to improve the localization system within the indoor environment. See repo [Triangulation_script](https://github.com/Batman787/Triangulation_script)
+  or [wifi-localisation](https://github.com/yxiao92/wifi-localisation)
+  ![image wifi positioning](https://hackster.imgix.net/uploads/attachments/1062768/illustrations_ambient-wifi-site-survey2.jpg?auto=compress%2Cformat&w=830&h=466.875&fit=min&dpr=2.625)
+  _Image credit: [Hackster](https://www.hackster.io/news/indoor-positioning-using-arduino-and-machine-learning-in-4-easy-steps-295d39e5e7c9)_
+
+## Closing thoughts
+
+Well, in my opinion, this project is super interesting. But, I wish I had more time to explore this subject.
+
+If I were to start over again, I would do the following:
+
+- Be consistent in developing and reviewing the project. Don't let the project be dormant for a long time, or otherwise, I'll lose the momentum.
+- Seek more people with better knowledge and expertise.
+- Manage priorities
+- Don't overestimate myself
+- Don't underestimate the time
+
+I documented everything in this GitHub page, do check it out: https://github.com/KOE-Wayfind
