@@ -1,0 +1,137 @@
+---
+title: MacBook in thumbshell mode
+pubDate: "2024-02-24"
+updatedDate: "2025-08-19"
+tags: ['macbook']
+description: My experience and thought process of using a MacBook with an external primary monitor and keeping the Mac screen off.
+heroImage: "../../assets/blog/macbook-thumbshell/thumbshell_meta.jpg"
+showHeroImage: false
+---
+
+import Admonition from "../../components/Admonition.astro";
+
+I've decided to rearrange my setup after I got a new 24" monitor from Carousel recently. I made this monitor my primary monitor, and the laptop's screen the secondary. Below is my setup with my work MacBook and the monitor. Pretty neat.
+
+![mac-with-open-state](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1708648889/website/macbook-thumbshell/w0hwz8odrguilstebspf.jpg)
+
+## Problems
+
+However, after several days of use, I think a single 24" monitor is enough for me to work. I found myself rarely looking at the secondary monitor. Plus, with the above setup, I've encountered this one specific problem with my browser.
+
+In my setup, I always have the device plugged in to power.
+
+I use [Arc](https://arc.net/) (btw). The tab is anchored to the left side of the screen. Usually, when I'm on the Mac itself, I just hard slam the cursor to the very left of my screen to bring out the Arc tab sidebar.
+
+This is what happens when I'm doing the same with this setup:
+
+<video src="https://i.imgur.com/D2jT5aB.mp4" autoplay controls playsinline preload="metadata" aria-label="hard slamming mouse cursor on arc problem" class="my-6 h-auto w-full" />
+
+<sub>*In case the video doesn't load, click [here](https://imgur.com/D2jT5aB).*</sub>
+
+The behavior is annoying because I need to slow the mouse down so that the sidebar can be shown. So I think, what if I can just turn off the laptop display? Since, again, I'm now comfortable working with just the external monitor.
+
+To recap, the goal I wanted to achieve is to:
+- **Completely turn off the laptop display.**
+
+There are **two** simple solutions. **Firstly**, just close the Mac screen. It will turn off the primary display and just output to the external display.
+
+But, the speaker output will be affected. The sound, especially if there is speech, will not be clear enough to hear. I didn't prefer using headphones/earphones for listening, except for video calls. For the record, my monitor has a pair of speakers, but you know the sound quality will be like.
+
+I still wanted the full experience of listening from the Mac speaker. So this option is out of the equation.
+
+**Secondly**, move the Mac to the right side of the monitor. So I'm no longer annoyed by the Arc browser sidebar behavior. But, this doesn't help me achieve the goal I mentioned above. So this one is also out of the equation.
+
+I tried looking for the similar option that Windows laptops conveniently have; "External monitor only", but I can't find the equivalent of it on Mac.
+
+![Windows Project setting](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1708742491/website/macbook-thumbshell/Screenshot_2024-02-24_104047_qd5abq.png)
+
+I also found this hacky trick on Reddit (can't find the original post) that suggests rearranging the display arrangement so the mouse cannot cross the laptop screen.
+
+![hacky solution mac rearrange display](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1708650171/website/macbook-thumbshell/Screenshot_2024-02-23_at_9.02.27_AM_sdvilg.png)
+
+It might work. It solved the Arc sidebar behavior. But it still doesn't turn off the display completely. Sometimes, some windows launch to the other display, and with this setup, it is difficult to move the window around.
+
+Another trick that I've read is to put magnets on the hall sensor of the Mac so that it thinks the lid is closed. So, I searched for fridge magnets I have and I tried.
+
+![mac fridge magnets](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1708738109/website/macbook-thumbshell/IMG_1647_uafxxq.jpg)
+
+Well, it doesn't work. Further searches on the internet, I found that the magnet trick only works on [older MacBooks](https://www.reddit.com/r/MacOS/comments/g006o9/pretty_cool_any_explanation/).
+
+Quoted from [Alin Panaitu's blog post](https://alinpanaitiu.com/blog/turn-off-macbook-display-clamshell/):
+
+> With the new 2021 design, the MacBook has a hinge sensor, that can detect not only if the lid is closed, but also the angle of its closing. Magnets can’t trick’em anymore.
+
+Oh, also, the blog post above is good to read. He discussed this same topic but on the software side.
+
+## Behold, the thumbshell mode
+
+Lastly, I found this [nice blog](https://foliovision.com/2023/04/m1-macbook-open-clamshell) where he set his Mac in thumbshell mode (Yup, I got the term thumbshell mode from this blog post). Seems like I have found people that share a similar problem with me. His solution is simple, just open the lid like normal, put a finger, and close the lid slowly until it reaches the finger.
+
+The laptop screen display will turn off, leaving the display output to the monitor only. Just like what I needed.
+
+![Foliovision's thumbshell mode](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1708737272/website/macbook-thumbshell/Screenshot_2024-02-24_at_9.12.41_AM_ox8xpl.png)
+
+So I went to try on my MacBook Air and it works. But then I remember, I have an extra keyboard gasket lying around, and I think the height/width is similar to the finger, so why not just put that thing in here.
+
+![Keyboard extra gasket](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1708741225/website/macbook-thumbshell/IMG_1646_jkr4fl.jpg)
+
+And then I close the lid slowly until it reaches the gasket. It still works, and it is more convenient than using my finger. 😄
+
+<div class="flex flex-wrap overflow-hidden [&_.image-figure]:max-w-full! [&_.expandable-image]:max-w-full! [&_img]:max-w-full!">
+  <div class="box-border my-1 w-full overflow-hidden px-2 xl:w-1/2">
+
+![Laptop thumbshell 1](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1708741314/website/macbook-thumbshell/IMG_1672_wamciv.jpg)
+
+  </div>
+  <div class="box-border my-1 w-full overflow-hidden px-2 xl:w-1/2">
+
+![Laptop thumbshell 2](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1708741225/website/macbook-thumbshell/IMG_1680_j52m5p.jpg)
+
+  </div>
+</div>
+
+What about the pros of using this method? I think I agree with what Alec has highlighted in his [blog post](https://foliovision.com/2023/04/m1-macbook-open-clamshell), which are:
+
+> "heat. Even a slender air vent lets a lot more heat out than no air vent. Hence fans come on much later and at a lower RPM."
+
+I didn't notice much difference using my MacBook Air, but I definitely prefer letting all the heat accumulate near the display panel.
+
+There are several drawbacks I've noticed. One of which is about sound. Let's quote from Alec's blog post:
+
+> What the thumb clamshell method doesn't help enough with is the speakers. The sound still isn't nearly as good as in open clamshell but on a scale of ten:
+>
+> open: 9,
+> closed: 2,
+> thumb clamshell: 6
+
+When fully closed, the output from the speaker is slower, reduced richness, and the speech isn't very clear. Using thumbshell mode, the sound is a bit better but not as the best when fully open the lid.
+
+<Admonition type="warning">
+
+I need to take extra care considering the gasket I put in there. When I need to pack my MacBook, I always remember to take out the gasket first. Also, if you have people around you that might accidentally close the lid, you'll need to be extra cautious.
+
+</Admonition>
+
+Thumbshell mode achieved my goal. Here is the overall look of my setup now.
+
+![setup with thumbshell](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1708742316/website/macbook-thumbshell/IMG_1674_xafxfp.jpg)
+
+## Updates
+
+I received a pair of speakers! It's Pebble V3. It's connected to the mac via Bluetooth. So, I no longer need to worry about muffled sound when the lid is fully closed.
+
+![speaker](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1755530259/website/macbook-thumbshell/IMG_20250818_231305219_l8tu6a.jpg)
+
+Secondly, my friend told me about a free app called [Amphetamine](https://apps.apple.com/my/app/amphetamine/id937984704?mt=12). It's a great tool to keep your Mac awake and prevent it from sleeping, especially when the lid is closed and it's running on battery.
+
+![AMphetime closed display mode](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1755533718/website/macbook-thumbshell/Screenshot_2025-08-19_at_12.14.48_AM_tetvff.png)
+
+I set a trigger to automatically activate Amphetamine when connected to an external display.
+
+![Amphetamine](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1755530302/website/macbook-thumbshell/Screenshot_2025-08-18_at_11.18.12_PM_ovcd9z.png)
+
+So, thumbshell mode is no longer my hack. I'll keep this post up for historical purposes. This is what my Mac setup looks like now.
+
+![Current mac setup](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1755645377/website/macbook-thumbshell/IMG_20250820_071325150_eqbydt.jpg)
+
+So the room changed? Yeah, I moved into a new house after getting married. It's cozier and has more space. And also, I got myself my own first MacBook! 😁

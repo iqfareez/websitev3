@@ -1,0 +1,141 @@
+---
+title: Headless Pi - For dummies
+pubDate: "2024-03-30"
+updatedDate: "2026-10-24"
+tags: ['raspberry-pi', 'homelab']
+description: Finally got one Raspberry to tinker around. It's going to be my homelab practice device. Here's a way to set up the Pi in headless mode (without monitor, keyboard & mouse).
+heroImage: "../../assets/blog/headless-pi/meta.png"
+showHeroImage: false
+---
+
+import Admonition from "../../components/Admonition.astro";
+
+Today, my Raspberry Pi 4 arrived. Pretty excited to finally own one. I used Raspberry Pi 3 & 4 occasionally in my Uni days previously. Now, I would like to have a little server
+running at home for various projects. I didn't find the need to make it like a 'computer', i.e., with monitor, mouse & keyboards attached. Controlling it via terminal using the host machine is fine.
+
+![raspberry-pi-cytron](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1711797473/website/RaspberryPi/IMG_1964_ngns72.jpg)
+
+For the **host machine**, I'm using Windows 11. Connected to the same Wi-Fi network as the Pi.
+
+## Create boot media
+
+Grab a microSD card; 16-32Gb is fine. Download [Raspberry Pi Imager](https://www.raspberrypi.com/software/), or other imager tools like [Balena Etcher](https://www.balena.io/etcher/) to burn the OS Image to the microSD card.
+I'm using the latest Raspberry Pi Bookworm 64-bit OS. Before installing, customize the OS by setting the hostname, Wi-Fi SSID & Password, enabling SSH, etc. For more info, read
+the docs [here](https://www.raspberrypi.com/documentation/computers/getting-started.html#raspberry-pi-imager).
+
+Once the OS is installed, remove the microSD card from the host and insert it into the Raspberry Pi. Power it up. Wait for a few minutes for the first boot.
+
+## Connect over SSH
+
+The Raspberry Pi will automatically connect to the Wi-Fi network. From the host machine, try pinging the Pi for confirmation.
+
+Open your Terminal and run:
+
+```powershell
+> ping raspi.local
+
+Pinging raspi.local [192.168.0.14] with 32 bytes of data:
+Reply from 192.168.0.14: bytes=32 time=60ms TTL=64
+Reply from 192.168.0.14: bytes=32 time=24ms TTL=64
+Reply from 192.168.0.14: bytes=32 time=7ms TTL=64
+Reply from 192.168.0.14: bytes=32 time=12ms TTL=64
+
+Ping statistics for 192.168.0.14:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 7ms, Maximum = 60ms, Average = 25ms
+```
+
+<Admonition type="note">
+
+`raspi` is the **hostname** I set when creating the boot media. You can replace it with your
+hostname. The discovery is possible because the Raspberry Pi is using mDNS that works out of the
+box using avahi. If you can't ping it, try to find the IP address of the Pi using your router
+admin page.
+
+</Admonition>
+
+Now, SSH into the Pi:
+
+```powershell
+ssh iqmal@raspi.local
+```
+
+<Admonition type="note">
+
+`iqmal` is the **username** I set when creating the boot media.
+
+</Admonition>
+
+You will be prompted to enter the password. Enter the password you set when creating the boot media. For the first time connection, you may be asked
+to trust the device, etc. Then, you should now be connected to the Pi.
+
+![Login SSH raspberry pi](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1711806294/website/RaspberryPi/Screenshot_2024-03-30_214431_byjmrm.png)
+
+Great, now you access the Pi terminal which you can install software, configure, etc.
+
+### Enable VNC
+
+This is an optional step if you want to use the Raspberry Pi by its GUI desktop interface. This desktop interface is what you'll see
+if you connect your Pi to the external monitor. Since we don't have any monitor connected physically, we can access it remotely using VNC (Virtual
+Network Computing).
+
+Good to note that, in Bookworm, they migrated to [**Wayland** as the display system](https://www.raspberrypi.com/news/bookworm-the-new-version-of-raspberry-pi-os/#:~:text=notice%20some%20differences.-,Wayland,-The%20most%20important) rather
+than X11 used in the previous OS generation.
+
+> Similarly, the Wayland security model prevents traditional remote desktop access, and so a new VNC server, called wayvnc, is being used instead of
+> RealVNC. This is a bit more restrictive in terms of the client applications which can connect to it — we have had good results with the TigerVNC
+> client, available [here](https://tigervnc.org/).
+
+To enable VNC, run the following command:
+
+```bash
+sudo raspi-config
+```
+
+<Admonition type="warning">
+
+I notice that, when I enable VNC **after** I do the [set default boot mode to
+CLI](#set-default-boot-mode-to-cli), it will create VNC config based on X11 backend, not wayland.
+This will cause the VNC viewer to show a blank screen.
+
+</Admonition>
+
+Navigate to `Interface Options` > `VNC` > `Yes`. Reboot the Pi.
+
+![VNC raspi config](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1711806703/website/RaspberryPi/Screenshot_2024-03-30_215130_dsacaf.png)
+
+On the host machine, download [TigerVNC](https://tigervnc.org/) viewer.
+
+Open TigerVNC viewer and enter the IP address/hostname of the Pi.
+
+![VNC Tiger Viewer](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1711808079/website/RaspberryPi/Screenshot_2024-03-30_215558_kygisy.png)
+
+Then, enter the login username & password.
+
+![VNC Login](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1711808122/website/RaspberryPi/Screenshot_2024-03-30_221451_rmjgtx.png)
+
+You should now see the Raspberry Pi desktop interface.
+
+![VNC Rasperry pi](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1711808124/website/RaspberryPi/Screenshot_2024-03-30_221515_r4y8ri.png)
+
+## Set default boot mode to CLI
+
+This is also an optional step since we are not using the GUI interface that much. We can change the default boot mode
+to CLI (Command Line Interface) to save some resources. We can always start a GUI anytime.
+
+```bash
+sudo raspi-config
+```
+
+Navigate to `System Options` > `Boot / Auto Login` > `Console Autologin`. Reboot the Pi.
+
+![boot mode raspi config](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1711809415/website/RaspberryPi/Screenshot_2024-03-30_223636_kbtcgo.png)
+
+To start the GUI interface if needed, from the SSH terminal, run:
+
+```bash
+sudo systemctl start lightdm
+```
+
+Connect VNC and you should see the desktop interface again.

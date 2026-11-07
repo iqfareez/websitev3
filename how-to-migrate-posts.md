@@ -10,6 +10,7 @@ Use this workflow to migrate posts from `websitev2` into this Astro project. Mig
    - `src/content.config.ts`: supported frontmatter and content loader.
    - `src/layouts/BlogPost.astro`: article layout and metadata display.
    - `src/components/Admonition.astro`: callout types and props.
+   - `src/plugins/image-captions.mjs`: Markdown image title-to-caption conversion.
    - `ec.config.mjs`: Expressive Code themes, typography, and line-number defaults.
    - Existing migrated posts in `src/content/blog/`: working examples.
 4. Consult the relevant Astro documentation listed in `AGENTS.md`, especially content collections and Markdown/MDX.
@@ -83,6 +84,27 @@ Omit optional fields when the source does not provide them. A missing required d
 7. Keep remote images and their attribution links intact unless the user asks to download them. Distinguish external dependencies from copied local assets in validation.
 
 Astro processes local Markdown images automatically. Do not introduce root-relative `/static/...` paths for migrated images.
+
+### Image captions
+
+If the original post uses `<figure>` and `<figcaption>`, migrate the caption into
+the Markdown image's optional title instead of copying the caption markup or its
+styling:
+
+```md
+![Original alt text](../../assets/blog/article-images/screenshot.jpg "Original caption text")
+```
+
+The shared caption plugin generates `<figure>` and `<figcaption>` automatically
+for standalone Markdown images, including linked images and images inside MDX
+layout wrappers. Keep the original alt text separate from the caption. Apply the
+same convention to captions previously written as styled `<div>` elements or
+separate caption paragraphs, preserving any surrounding layout wrappers.
+
+Captions support plain text. If the original caption contains links or formatting,
+preserve its wording in the title and retain attribution or other links in adjacent
+Markdown text; do not silently discard them. Images without a source caption
+should remain without a title; do not generate captions from alt text.
 
 ## 4. Adapt MDX components
 
@@ -161,6 +183,7 @@ Verify the generated output:
 - Every generated local image URL points to an existing output file; counts match the source inventory. When `showHeroImage: false`, the cover must be absent from the article body but remain in `og:image`, with its generated asset present in the output.
 - Hero visibility matches the original layout: hidden for `PostSimple` and `PostLayout`, visible for `PostBanner` / `postBanner` when a cover exists. Posts without the new flag retain the default visible cover. Verify `og:image` uses the article's cover regardless of visibility.
 - GIF-derived media remains animated and retains its intended duration and looping.
+- Original image captions render below their images with the shared caption styling, including in multi-column layouts. The lightbox displays explicit captions only; images without captions must not display alt text as a caption.
 - Callouts, code examples, expandable sections, nested images, and Markdown formatting render correctly.
 - Code filenames, line numbers, insertion highlights, and copy buttons work in both light and dark themes; headings have space after code blocks.
 - Article links and fragments resolve to existing pages and heading IDs. Check reciprocal links where applicable.

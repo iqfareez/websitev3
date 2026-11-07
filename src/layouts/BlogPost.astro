@@ -154,9 +154,20 @@ const {
           max-width: 100%;
           height: auto;
         }
+        .prose :global(.image-figure) {
+          max-width: 56%;
+        }
+        .prose :global(.image-figure:has(img[data-wide])) {
+          max-width: 100%;
+        }
+        .prose :global(.image-figure img),
+        .prose :global(.image-figure .expandable-image) {
+          max-width: 100%;
+        }
       }
       .prose :global(table .expandable-image),
-      .prose :global(table img) {
+      .prose :global(table img),
+      .prose :global(table .image-figure) {
         display: block;
         width: 100%;
         max-width: 100%;

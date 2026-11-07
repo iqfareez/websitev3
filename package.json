@@ -13,6 +13,7 @@
     "postinstall": "playwright install chromium"
   },
   "dependencies": {
+    "@astrojs/markdown-satteri": "^0.4.5",
     "@astrojs/mdx": "^8.1.1",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
@@ -21,6 +22,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.4.2",
     "astro-expressive-code": "^0.44.3",
+    "satteri": "^0.10.5",
     "sharp": "^0.35.0",
     "tailwindcss": "^4.3.3"
   },

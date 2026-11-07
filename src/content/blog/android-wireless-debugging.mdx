@@ -1,0 +1,80 @@
+---
+title: Android Wireless Debugging
+pubDate: "2024-06-23"
+updatedDate: "2025-06-19"
+tags: ['tutorial', 'android', 'adb']
+description: Simple tutorial on how to enable Wireless ADB (Android Debug Bridge) feature on Android. So no more cable is needed!
+heroImage: "../../assets/blog/wireless-adb/adb-wireless-debugging-meta.jpg"
+showHeroImage: true
+---
+
+import Admonition from "../../components/Admonition.astro";
+
+In this tutorial, I'll show you how to enable and set up Android wireless debugging using the command line for Android 11 or later (Android 10 and lower use a slightly different method, which is not covered in this post).
+
+## Prerequisites
+
+- [adb](https://developer.android.com/tools/adb) (Android Debug Bridge)
+- Host machine (Windows, Linux, macOS, etc.)
+- Physical Android device
+- Wifi network
+
+You can download adb from Android Studio or as standalone installations. Make sure the path to the adb executables is added to PATH. For example, on Windows, adb binary is located at `C:\Users\<User>\AppData\Local\Android\Sdk\platform-tools\adb.exe`.
+
+You can check if adb is ready by running the command `adb --version`.
+
+![check adb is installed](../../assets/blog/wireless-adb/terminal-1.png)
+
+Please enable Developer Options first if you haven't done so. See this [guide](https://www.digitaltrends.com/mobile/how-to-get-developer-options-on-android/).
+
+Both the host machine and Android device need to be on the same Wifi network.
+
+<Admonition type="warning">
+
+Some public/university wifi networks have restrictions and can't be used for wireless debugging.
+
+</Admonition>
+
+## Pairing
+
+On your Android device, go to Settings > Developer Options. Scroll down and tap on the Wireless Debugging section.
+
+![Setting Wireless Debugging](../../assets/blog/wireless-adb/developer-options.png)
+
+Tap on **Pair Device with Pairing Code**.
+
+![Wireless Debugging pair](../../assets/blog/wireless-adb/wireless-debugging-pair.png)
+
+Open a terminal on the host machine. Enter the following command (replace `IPADDRESS` and `PORT` with the IP address and port shown on the Android device):
+
+```shell
+adb pair IPADDRESS:PORT
+```
+
+![Host machine ADB Pair](../../assets/blog/wireless-adb/terminal-2.png)
+
+After successful pairing, the host machine will appear in the list of paired devices.
+
+![Android ADB Paired](../../assets/blog/wireless-adb/android-abd-paired.jpg)
+
+## Connect to the device
+
+Whenever you want to connect to the device, use the following command (replace `IPADDRESS` and `PORT` with the IP address and port shown on the Android device):
+
+```shell
+adb connect IPADDRESS:PORT
+```
+
+![Android Ip & port to connect](../../assets/blog/wireless-adb/android-connect-ip-port.jpg)
+
+<Admonition type="tip">
+
+Check which devices are connected to ADB by running `adb devices`.
+
+</Admonition>
+
+![Terminal 3](../../assets/blog/wireless-adb/terminal-3.png)
+
+That's it! Now you can debug your app on your Android device.
+
+I only use this feature sparingly because sometimes it disconnects unexpectedly, and the transfer speed may be limited as well. Most of the time, I use cables because they feel more reliable and can charge the device at the same time. Use whichever method works best for you. Happy debugging!

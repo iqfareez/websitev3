@@ -39,6 +39,17 @@ Itatur? Quiatae cullecum rem ent aut odis in re eossequodi nonsequ idebis ne sap
 
 ![blog placeholder](../assets/images/iqfareez-is-awesome.jpg)
 
+### Image captions
+
+Use the optional image title for a plain-text caption. Alt text still describes
+the image for accessibility.
+
+```markdown
+![Alt text](./path/to/image.jpg "Caption shown below the image")
+```
+
+![blog placeholder](../assets/images/iqfareez-is-awesome.jpg "A caption rendered from the Markdown image title")
+
 ## Blockquotes
 
 The blockquote element represents content that is quoted from another source, optionally with a citation which must be within a `footer` or `cite` element, and optionally with in-line changes such as annotations and abbreviations.
