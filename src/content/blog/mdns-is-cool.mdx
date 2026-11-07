@@ -1,0 +1,69 @@
+---
+title: mDNS is so cool!
+pubDate: "2025-06-22"
+tags: ['homelab', 'network', 'proxmox']
+description: I just discovered how to set up and use mDNS. And I didn't expect it to be this easy!
+heroImage: "https://res.cloudinary.com/iqfareez-cloud/image/upload/v1750463699/website/blog-mdns/ogimage-mdns_n7ub9s.jpg"
+showHeroImage: false
+---
+
+import Admonition from "../../components/Admonition.astro";
+
+I just provisioned an LXC Container or VM in Proxmox (or anywhere). When I want to [SSH](https://www.cloudflare.com/learning/access-management/what-is-ssh/) into it, I use its IP address. That sounds pretty normal, right?
+
+```powershell
+ssh root@192.168.1.139
+```
+
+IP addresses seem intimidating, you can't just remember every IP address of your devices. But there is an easier way to do this: take the hostname of the server and append `.local` to it. My hostname is `ubuntu-server-105`. So, I can just do this: `ssh root@ubuntu-server-105.local`.
+
+But not so fast, this only works if your server is running mDNS (Multicast DNS). mDNS is a protocol that allows devices on the same local network to discover each other without needing a central DNS server. It's particularly useful in home networks or small office setups. More about this later. Some servers/services already have support for mDNS, such as Raspberry Pi OS, OpenMediaVault, HomeAssistant, etc. Even your printer or IoT devices! Now, how do you set this up? *Spoiler: it's super easy!*
+
+SSH into your server:
+
+```bash
+ssh root@192.168.1.139
+```
+
+Install `avahi-daemon`:
+
+```bash
+sudo apt install avahi-daemon
+```
+
+And exit the SSH session:
+
+```bash
+logout
+```
+
+And... that's it! Go back to your host terminal and connect using the `.local` domain to your server.
+
+```powershell
+ssh root@ubuntu-server-105.local
+```
+
+<Admonition type="tip">
+
+You can get the hostname of your server by running the `hostname` command in the terminal.
+
+</Admonition>
+
+![screenshot ssh mdns](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1750462819/website/blog-mdns/ssh-mdns_bde8ax.png)
+
+What is [avahi](https://avahi.org/)? It's a service that implements the mDNS protocol on Linux. It allows your server to announce its hostname and IP address to other devices on the same network. When you install `avahi-daemon`, it automatically starts running in the background, listening for mDNS queries.
+
+<Admonition type="note">
+
+`.local` is a special top-level domain used by mDNS. For mDNS, it must be `.local` and not other TLDs. See [RFC 6762](https://datatracker.ietf.org/doc/html/rfc6762) for detailed specifications. "Locally" here refers to devices within the same subnet or broadcast domain.
+
+</Admonition>
+
+Here's a super high-level explanation of how mDNS works:
+1. **Discovery**: When a device (like your laptop) connects to the network, it sends out a multicast DNS query to discover other devices.
+2. **Response**: The server running `avahi-daemon` responds to the query with its hostname and IP address.
+3. **Connection**: Now, the device can resolve the hostname to an IP address and connect to the server using that hostname.
+
+mDNS can be utilized in homelab setups, where you don't have to set up a local DNS server to resolve the hostname of your devices. It's a great way to simplify network management and make it easier to connect to your devices without remembering IP addresses, especially when the IP keeps changing if it is set to DHCP.
+
+The limitation of using mDNS is that it works locally only. For example, if you have a Tailscale setup, you cannot use the `.local` domain from your other machine. Tailscale uses its own DNS system, and `.local` domains are not resolved across Tailscale nodes. Additionally, mDNS can cause performance issues on larger networks due to multicast traffic being sent to all devices, which can lead to congestion.

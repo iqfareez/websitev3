@@ -1,0 +1,128 @@
+---
+title: My PC is finally fixed & optimized
+description: Prevent PC hangs when doing intensive tasks by changing this one setting. Also, reclaim a bit of hardware-reserved RAM space. But there is one issue for which I have yet to find a solution.
+pubDate: "2026-04-28"
+heroImage: "../../assets/blog/my-pc-finally-optimized/meta-my-pc-finally-optimized.jpg"
+showHeroImage: true
+tags: ['pc-build']
+---
+
+import Admonition from "../../components/Admonition.astro";
+
+In this post, I'll break down **three** fixes/optimizations that I recently made to my PC. You can jump to any section at any time:
+
+- [Reclaiming hardware reserved RAM space](#reclaiming-hardware-reserved-ram-space)
+- [Change automatic SWAP drive settings](#change-automatic-swap-drive-settings)
+- [Unresolved issue: Unable to run RAM at its advertised speed](#unresolved-issue-unable-to-run-ram-at-its-advertised-speed)
+
+## Reclaiming hardware reserved RAM space
+
+Take a look at my Task Manager screenshot below.
+
+![Task Manager screenshot showing hardware reserved RAM space before enabling dGPU only mode](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1776691232/website/ram-issue-blog-post/ram-hardware-reserved-before_n2j86j.png "My RAM section in Task Manager")
+
+Look at the **Hardware reserved** section. It is using 936 MB of my RAM. While that is not a lot, if it is left unused, it would be better if we could utilize it. After all, in this economy where all computer components are ridiculously expensive, **0.9 GB of space** is still space that I don't want to waste. I understand that hardware-reserved memory is often used by the integrated GPU. But since my system already has a dedicated GPU, the reserved space is not needed as much. So, I wanted to reclaim that space.
+
+I searched online and found one post from [Reddit](https://www.reddit.com/r/ASRock/comments/1ij6840/i_fixed_my_hardware_reserved_ram_problem/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button). I could not find the specific setting the OP mentioned. So, I turned to an LLM to guide me. Below are the steps to disable the iGPU and reclaim a bit of the hardware-reserved RAM space. The steps might be specific to my motherboard, the [ASRock A620M-HDVM.2](https://www.asrock.com/MB/AMD/A620M-HDVM.2/index.asp), but you can try to find similar settings in your BIOS if you have the same issue.
+
+1. Boot into BIOS settings.
+2. Go to the **Advanced** tab.
+3. Enter the `AMD CBS` menu. _(CBS stands for **C**ommon **B**IOS **S**ettings)_
+4. Enter the `NBIO Common Options` menu. _(NBIO stands for **N**orth**B**ridge **I**nput/**O**utput)_
+5. Enter the `GFX Configuration` menu.
+6. Find the `dGPU Only Mode` setting, and change it from `Auto` to `Enabled`.
+
+![Turn on dGPU only mode in ASRock BIOS](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1776692169/website/ram-issue-blog-post/dGPU_only_mode_ASrock_ommtdu.jpg "The setting was originally set to Auto. Change it to Enabled.")
+
+Save the settings and exit the BIOS. After booting into Windows, check Task Manager again. The hardware-reserved RAM space should be reduced, and I now have 15.6 GB of usable RAM instead of 15.1 GB. I admit that this is not a huge difference, but at least the previously reserved RAM space is now being put to use by the system.
+
+![Task Manager screenshot showing reduced hardware reserved RAM space after enabling dGPU only mode](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1776692606/website/ram-issue-blog-post/ram-hardware-reserved-after_sa79md.png "Hardware reserved is now 425 MB. Notice that the integrated GPU is no longer shown on the side.")
+
+I hope RAM prices will drop soon. End~
+
+## Change automatic SWAP drive settings
+
+<Admonition type="note">
+
+In this section, I may refer to the Windows page file as SWAP interchangeably.
+
+</Admonition>
+
+When doing heavy work, such as compiling code with the emulator running, **my PC would stutter**. The UI would freeze, including the mouse cursor. I had to wait for a few seconds before it responded again, but half the time, it never responded and I had to force it to shut down.
+
+Although infrequent, the freezes were severe. During one incident, Task Manager showed 100% disk usage. And who was using it? The **`System`** process. Huh?
+
+I looked it up online, and one Reddit post said it was normal because Windows might be doing maintenance in the background, e.g., defragmenting the disk or installing updates. But I don't think that's the case. It happened everytime when I was doing heavy work, even after I restarted my PC!
+
+Again, I turned to an LLM to ask for help. It gave me some possible causes, and I think one on the reason hit a bullseye:
+
+> ...If pagefile is on this HDD, Windows may be swapping memory to that slow drive, making everything worse.
+
+Now, how do I prevent Windows from using my HDD as SWAP? You can follow these steps:
+
+1. Search `View advanced system settings`. Open it.
+2. Go to the `Advanced` tab and click `Settings` in the `Performance` section.
+3. Go to the `Advanced` tab and click `Change` in the `Virtual memory` section.
+4. Uncheck `Automatically manage paging file size for all drives`. This is the culprit causing the issue. Windows is using the HDD. I think it chooses the drive with the most free space available.
+
+You need to select which drive you allow Windows to use as SWAP. I selected only my SSD.
+
+![Virtual memory settings in Windows](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1776727325/website/ram-issue-blog-post/virtual-memory-windows-not-managed-automatically_z6r1gp.png "These are the settings that fixed the issue.")
+
+After restarting the PC, I try to see if the issue is still reproducible by running Flutter build (basically a code compilation to trigger high memory usage). The compilation was successful, and **I didn't encounter any stuttering** or freezing issues. I can say that the issue is finally fixed!
+
+So, here's what I think originally happened. When I'm compiling a codebase, my RAM is under pressure, that is, a lot of data is moving in and out. Windows will try to use the SWAP drive to offload some of the data from RAM to the disk.
+
+Unfortunately, Windows is 'smart' enough to choose my HDD as the SWAP drive, for whatever reason. Because an HDD is slower than an SSD, this caused high disk usage as I/O operations took place, which slowed the whole computer down.
+
+The illustration below shows how the SWAP/page file system works. When the computer is short on RAM, it looks for a drive to which it can offload RAM data.
+
+<div class="block dark:hidden">
+
+![Illustration showing how SWAP/Pagefile system works, with RAM and Disk, and how data is moved between them when RAM is under pressure](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1776779809/website/ram-issue-blog-post/swap-work-how-ilustration_c554dj.svg "This is how a SWAP/Pagefile system works, in essence.")
+
+</div>
+
+<div class="hidden dark:block">
+
+![Illustration showing how SWAP/Pagefile system works, with RAM and Disk, and how data is moved between them when RAM is under pressure](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1776779435/website/ram-issue-blog-post/swap-work-how-ilustration-dark_k9pmqa.svg "This is how a SWAP/Pagefile system works, in essence.")
+
+</div>
+
+End~
+
+## Unresolved issue: Unable to run RAM at its advertised speed
+
+<Admonition type="note" >
+
+I thought I had solved this issue, but my PC crashed again while I was finalizing this article. I prevented further crashes by lowering the RAM speed to 5600 MT/s. The computer is still fast, and the performance difference is negligible.
+
+The text below documents the BIOS update and the temporary improvement it provided.
+
+</Admonition>
+
+Since I [built my first PC in 2024](./i-built-my-first-pc), I have been unable to configure my RAM to run at its advertised speed. I have a single 16 GB Adata XPG Lander DDR5 RAM module that is advertised to run at 6000 MT/s. It has an EXPO profile that I can enable in the BIOS. However, when I activate the profile, my PC randomly crashes or stops responding while I use it. I have to force it to shut down before starting it again.
+
+![BSOD error throwing stop code FAULTY_HARDWARE_CORRUPTED_PAGE](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1776688482/website/ram-issue-blog-post/IMG_20240924_153007_l0k8us.jpg "The BSOD screen I'm getting, and the error message sometimes changes")
+
+This is, of course, very annoying to me. I searched everywhere for a solution, but couldn't find anyone who had the same issue as me. I ran a memory test, and it didn't show any errors. I analyzed the crash dump but found nothing helpful. I also tried to update my BIOS, but the issue still persists.
+
+I thought that perhaps I had received a _lemon unit_[^1] RAM module, so I accepted my fate. I manually turned down the speed to 5400 MT/s, and my PC ran without any issues. Despite not running at its maximum speed, it's not the end of the world, and I can live with it. Finally, I can work and play games without random crashes.
+
+![RAM Bios turned down to 5400 MT/s](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1776689454/website/ram-issue-blog-post/IMG_20260307_162813005_u1zvc0.jpg "My modified RAM settings in BIOS")
+
+Recently, ASRock (my motherboard manufacturer) released a BIOS update mentioning 'Improved memory compatibility'. This was the first memory-related fix listed in its [BIOS update history](https://www.asrock.com/MB/AMD/A620M-HDVM.2/index.asp#BIOS), so I updated the BIOS and enabled the EXPO profile again.
+
+![ASrock bios update page](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1776689959/website/ram-issue-blog-post/Screenshot_2026-04-20_205607_ueznee.png "ASRock BIOS update page for my motherboard")
+
+For a few days, I could use the RAM at its advertised 6000 MT/s speed without crashes or hangs. However, the problem eventually returned, so the BIOS update did not provide a permanent fix.
+
+![RAM Task Manager showing 6000 MT/s speed](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1776690767/website/ram-issue-blog-post/Screenshot_2026-04-20_211148_luaq0v.png "RAM Task Manager showing 6000 MT/s speed")
+
+End~
+
+___
+
+Thanks for reading this post. I hope it can help you if you have the same issue as me. If you have any questions, feel free to leave a comment below.
+
+[^1]: Lemon unit is a term used to describe a defective vehicle shortly after purchase.
