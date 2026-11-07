@@ -1,7 +1,7 @@
 ---
 title: CUDA on Nvidia MX130 GPU
 pubDate: "2023-01-28"
-updatedDate: "2025-04-10"
+updatedDate: "2026-11-07"
 tags: ['cuda', 'pytorch', 'superglue', 'gpu']
 description: Guide to use CUDA on Nvidia MX130 GPU to accelerate ML/AI inferencing on laptops
 heroImage: "../../assets/blog/cuda-mx130/CUDA-Blog-metatags.png"
@@ -12,7 +12,7 @@ import Admonition from "../../components/Admonition.astro";
 
 ***This post was revisited in March 2025 after I clean-installed Windows on my laptop. Some content of this post has been updated to reflect the current behavior of the system.***
 
-Welcome to this guide on how to enable CUDA on an [Nvidia MX130](https://www.nvidia.com/en-gb/geforce/gaming-laptops/nvidia-geforce-mx130/) GPU for machine vision inference on laptops. **CUDA** is a parallel computing platform and programming model developed by NVIDIA for general computing on graphical processing units (GPUs).
+Welcome to this guide on how to enable CUDA on an [Nvidia MX130](https://www.nvidia.com/en-gb/geforce/gaming-laptops/nvidia-geforce-mx130/) ([*wayback machine*](https://web.archive.org/web/20240518132545/https://www.nvidia.com/en-gb/geforce/gaming-laptops/nvidia-geforce-mx130/)) GPU for machine vision inference on laptops. **CUDA** is a parallel computing platform and programming model developed by NVIDIA for general computing on graphical processing units (GPUs).
 
 The Nvidia MX130 is a dedicated GPU that is commonly found in laptops. It is not as powerful as the RTX GPU families, but it can still run some machine vision tasks efficiently. In this guide, we will cover the installation of necessary drivers and software, as well as any configuration required to properly utilize the GPU for these types of computations using [Pytorch](https://pytorch.org/). Keep in mind that the mileage may vary when using other frameworks.
 
@@ -24,7 +24,9 @@ Usually, a laptop with an NVIDIA GPU already has NVIDIA drivers preinstalled alo
 
 ![Nvidia Control Panel Driver](../../assets/blog/cuda-mx130/Screenshot_2023-01-28_075046.png)
 
-According to the [specifications page](https://www.nvidia.com/en-us/geforce/gaming-laptops/mx130/specifications/), the Nvidia MX130 supports CUDA. If you own a different Nvidia GPU, you can still follow this guide, but the results may vary depending on your hardware.
+According to the [specifications page](https://www.nvidia.com/en-us/geforce/gaming-laptops/mx130/specifications/) ([*wayback machine*](https://web.archive.org/web/20250315174255/https://www.nvidia.com/en-us/geforce/gaming-laptops/mx130/specifications/)), the Nvidia MX130 **supports CUDA**. If you own a different Nvidia GPU, you can still follow this guide, but the results may vary depending on your hardware.
+
+![Cuda Suppport on MX130](../../assets/blog/cuda-mx130/cuda-mx130-specs.png)
 
 Optionally, you can verify the CUDA support using Python.
 

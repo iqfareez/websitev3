@@ -36,7 +36,7 @@ In this article, we're going to dive into how the programs work on [ATMega328P](
 
 ### Manual (Must have for reference)
 
-- [AVR Instruction Set Manual](http://ww1.microchip.com/downloads/en/devicedoc/atmel-0856-avr-instruction-set-manual.pdf)
+- [AVR Instruction Set Manual](https://ww1.microchip.com/downloads/en/DeviceDoc/AVR-InstructionSet-Manual-DS40002198.pdf)
 
 ## Understanding the ports
 
@@ -55,9 +55,8 @@ BCD is **not the same** as binary representation. _(Read more [here](https://www
 Both ICs I've mentioned above accept 4-bit BCD input, and outputs to 7-segment display.
 
 Below is the truth table for the decoder. Note that in this article, I'm using the `DCBA` convention instead of `ABCD`.
-(Image credit: [Digital Electronics](https://sites.google.com/site/tanglindigitalelectronics/basic-digital-circuits/bcd-to-seven-segment-display))
 
-![BCD to 7-Segment Decoder Truth Table](https://www.electrical4u.com/images/march16/1460385570.PNG)
+![BCD to 7-Segment Decoder Truth Table](../../assets/blog/assembly-counter/bcd-7-segments-truth-table.png "BCD to 7-Segment Decoder Truth Table")
 
 Now, for example, we want **to display a digit `4` on the 7-Segment display**, how do we do that?
 
@@ -86,7 +85,7 @@ With all of that, it should be displaying digit 4 now:
 Maybe you were wondering, why `0x20`? `0x20` is equivalent to `0010 0000` in binary, representing which PD𝑥 in PORT𝑥
 to be set as HIGH. In this case, it's pin 5 (counting from 0).
 
-![explanation digit 4 binary](../../assets/blog/assembly-counter/example-digit-4.png)
+![explanation digit 4 binary](../../assets/blog/assembly-counter/example-digit-4.png "Arduino Pin diagram close-up")
 
 Ok, enough introductions, now back to our objective, which counts from **0 to 9** and displays on the 7-Segment display.
 

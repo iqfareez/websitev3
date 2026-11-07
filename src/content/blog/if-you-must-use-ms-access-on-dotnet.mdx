@@ -25,7 +25,7 @@ I tried the options in order from top to bottom.
 
 I have actually used **UCanAccess** previously, but not directly. UCanAccess is included in DBeaver, the database management tool that I use. So, before going any further, I tested the driver's read and write capabilities on **both Windows and WSL**. It works like a charm! Now, I **just** need to integrate it with my .NET app.
 
-UCanAccess is a Java library, so how do we even use it in .NET? **Meet [IKVM](https://www.ikvm.net/)**, a tool that allows you to translate a JAR file into a .NET assembly (.dll).
+UCanAccess is a Java library, so how do we even use it in .NET? **Meet [IKVM](https://ikvm.org/)**, a tool that allows you to translate a JAR file into a .NET assembly (.dll).
 
 First, you'll need the UCanAccess JAR files. You can get them from the [UCanAccess download page](https://sourceforge.net/projects/ucanaccess/files/) (download the `*bin.zip`, not `*-src.zip`). The latest version at the time of writing is `5.0.1`. Read the steps below:
 

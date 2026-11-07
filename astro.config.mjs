@@ -34,6 +34,8 @@ export default defineConfig({
     },
     redirects: {
         '/gh': 'https://github.com/iqfareez?tab=repositories',
+        '/blog/acces-proxomox-remotely-with-tailscale': '/blog/access-proxmox-remotely-with-tailscale',
+        '/blog/new-homepage-api-waktusolat': 'https://waktusolat.app/blog/new-homepage-api-waktusolat/',
     },
 
     fonts: [
