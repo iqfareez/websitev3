@@ -1,0 +1,136 @@
+---
+import { IconCheck, IconLink } from "@tabler/icons-astro";
+---
+
+<template id="heading-permalink-template">
+  <button
+    class="heading-permalink transition-[opacity,color,background-color,scale] duration-150 ease-out active:scale-90 motion-reduce:transition-none motion-reduce:active:scale-100"
+    type="button"
+  >
+    <IconLink
+      class="link-icon absolute transition-[opacity,transform] duration-150 ease-out motion-reduce:transition-none"
+      size={20}
+      stroke={1.8}
+      aria-hidden="true"
+    />
+    <IconCheck
+      class="copied-icon absolute transition-[opacity,transform] duration-150 ease-out motion-reduce:transition-none"
+      size={20}
+      stroke={1.8}
+      aria-hidden="true"
+    />
+  </button>
+</template>
+<span id="heading-permalink-status" class="sr-only" role="status"></span>
+
+<style>
+  .heading-permalink {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-inline-start: 0.35rem;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--color-zinc-500);
+    vertical-align: middle;
+    cursor: pointer;
+    opacity: 0;
+  }
+  :global(.prose :is(h1, h2, h3, h4, h5, h6):hover) .heading-permalink,
+  .heading-permalink:focus-visible,
+  .heading-permalink[data-feedback] {
+    opacity: 1;
+  }
+  .heading-permalink:hover {
+    color: var(--accent-dark);
+    background: var(--color-zinc-100);
+  }
+  .heading-permalink:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .copied-icon,
+  .heading-permalink[data-copied] .link-icon {
+    opacity: 0;
+    transform: scale(0.75);
+  }
+  .heading-permalink[data-copied] .copied-icon {
+    opacity: 1;
+    transform: scale(1);
+    color: var(--accent-dark);
+  }
+  .heading-permalink[data-feedback]::after {
+    content: attr(data-feedback);
+    position: absolute;
+    inset-block-end: calc(100% + 0.4rem);
+    inset-inline-end: 0;
+    padding: 0.35rem 0.5rem;
+    border-radius: 4px;
+    background: var(--color-zinc-800);
+    color: white;
+    font: 400 0.8125rem/1.4 var(--font-atkinson);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  @media (hover: none) {
+    .heading-permalink {
+      width: 2rem;
+      height: 2rem;
+      opacity: 1;
+    }
+  }
+</style>
+
+<script>
+  const template = document.querySelector<HTMLTemplateElement>(
+    "#heading-permalink-template",
+  )!;
+  const status = document.querySelector<HTMLElement>(
+    "#heading-permalink-status",
+  )!;
+
+  document
+    .querySelectorAll<HTMLElement>(
+      ".prose :is(h1, h2, h3, h4, h5, h6)[id]:not(.article-title)",
+    )
+    .forEach((heading) => {
+      const button = template.content.firstElementChild!.cloneNode(
+        true,
+      ) as HTMLButtonElement;
+      const label = `Copy link to ${heading.textContent?.trim()}`;
+      button.setAttribute("aria-label", label);
+      button.title = "Copy link to this heading";
+      let resetTimer: ReturnType<typeof setTimeout>;
+
+      button.addEventListener("click", async () => {
+        const url = new URL(window.location.href);
+        url.search = "";
+        url.hash = heading.id;
+        status.textContent = "";
+        clearTimeout(resetTimer);
+
+        try {
+          await navigator.clipboard.writeText(url.href);
+          button.dataset.copied = "";
+          button.dataset.feedback = "Link copied!";
+          status.textContent = "Link copied to clipboard.";
+        } catch {
+          delete button.dataset.copied;
+          button.dataset.feedback = "Could not copy. Try again.";
+          status.textContent = "Could not copy the link. Please try again.";
+        }
+
+        resetTimer = setTimeout(() => {
+          delete button.dataset.copied;
+          delete button.dataset.feedback;
+        }, 2000);
+      });
+
+      heading.append(button);
+    });
+</script>
