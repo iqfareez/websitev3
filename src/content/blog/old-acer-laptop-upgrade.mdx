@@ -1,0 +1,204 @@
+---
+title: Giving a new life to my 2010 laptop
+pubDate: "2024-01-26"
+updatedDate: "2025-03-04"
+tags: ['laptop', 'ubuntu', 'diy']
+description: My first laptop I got in 2010; Acer Aspire 4738Z cannot cope with the latest OS anymore due to its hardware. Why not upgrade it to give it extra life?
+heroImage: "../../assets/blog/laptop-aspire-upgrade/laptop-og-image.png"
+showHeroImage: false
+---
+
+## A little backstory
+
+Back in 2010, when I was still in primary school, my dad bought us our first laptop. My brother and I loved it.
+The model is **Acer Aspire 4738Z**. It has 2GB of RAM, 320GB of HDD, and Intel Pentium P6100. It was a great laptop
+back then. We mainly used it for school work and some light gaming (We loved to play this KokoKrunch's game; [Monster Trux](https://www.myabandonware.com/game/monster-trux-extreme-offroad-edition-gct)).
+
+The laptop also helped me survive in my foundation year in university. At this point, I realized that the laptop
+was getting worse in performance. The time taken between pressing the power button until I could interact with it
+was like 15 minutes! I could still do work on Word or PowerPoint, but it required a lot of patience. _(I can't believe
+it myself that I could survive with that kind of frustration)_
+
+In 2019, I purchased a new laptop. Since then, this old laptop has been collecting dust in the cabinet.
+
+## Previous project
+
+At one point previously, I tried to repurpose the laptop monitor to become an external monitor. The project was successful, and I was happy,
+but there are reasons I think it is not practical to use it; the viewing experience is bad, the display is too small, and the dangling electronics
+made it difficult to store. So I decided to scrap the project.
+
+![Facebook Post Monitor Project](../../assets/blog/laptop-aspire-upgrade/fb-post-monitor.png)
+
+*Link to post: https://www.facebook.com/groups/DIYHobiEletrik/permalink/897535880654623/*
+
+
+## Choosing the OS
+
+Before upgrading the hardware, I think it is better to choose the OS first, from there I can decide what hardware to buy. Currently,
+this laptop has both Windows 10 & Ubuntu 18 installed (Dual boot). So, telling from experience, Ubuntu requires much less
+resources than Windows does. I'm also not planning to do any work on this laptop that requires Windows.
+
+So, I decided to go **full Linux**. Since I'm most comfortable with Ubuntu, I decided to install the latest Ubuntu interim release 23.10.
+
+## Upgrading the hardware
+
+Now that we have chosen the OS, let's start hunting for suitable hardware. Remember that I'm not planning to do any demanding
+tasks with this machine.
+
+### Processor
+
+I don't want to mess with the Processor. So, let's just skip this part. But, I just wanted to show here the processor that I took out from
+its socket in 2019.
+
+<div class="flex flex-wrap overflow-hidden [&_.image-figure]:max-w-full! [&_.expandable-image]:max-w-full! [&_img]:max-w-full!">
+  <div class="box-border my-1 w-full overflow-hidden px-2 xl:w-1/2">
+
+![Processor](../../assets/blog/laptop-aspire-upgrade/20190808_201422.jpg)
+
+  </div>
+  <div class="box-border my-1 w-full overflow-hidden px-2 xl:w-1/2">
+
+![Socket](../../assets/blog/laptop-aspire-upgrade/20190808_201433.jpg)
+
+  </div>
+</div>
+
+I did check the official specification page of the
+processor to see if there is any useful information we could use.
+
+[![Intel p6100 Memory Spec](../../assets/blog/laptop-aspire-upgrade/intel-memory-reqs.png)](https://ark.intel.com/content/www/us/en/ark/products/50175/intel-pentium-processor-p6100-3m-cache-2-00-ghz.html)
+
+Ah, max 8 GB RAM. Noted that.
+
+### RAM
+
+Hmm, how much RAM do I need? The system is equipped with 2 GB RAM. I think, by adding 4 GB more (total 6 GB) should
+be sufficient enough. I tried to match the current RAM model and specification to maximize compatibility.
+
+<div class="flex flex-wrap overflow-hidden [&_.image-figure]:max-w-full! [&_.expandable-image]:max-w-full! [&_img]:max-w-full!">
+  <div class="box-border my-1 w-full overflow-hidden px-2 xl:w-1/2">
+
+![Current and new RAM](../../assets/blog/laptop-aspire-upgrade/IMG_1469.jpg "Top = old, bottom = new")
+  </div>
+  <div class="box-border my-1 w-full overflow-hidden px-2 xl:w-1/2">
+
+![Current and new RAM installed](../../assets/blog/laptop-aspire-upgrade/IMG_20240119_203617.jpg "Top = new, bottom = old")
+  </div>
+</div>
+
+### Disk
+
+SSD is a must. Using decades-old mechanical spinning disks just makes the system slow. 240 GB should be enough for this
+system. Luckily, SSD prices have gone down over the years.
+
+Installed!
+
+<div class="flex flex-wrap overflow-hidden [&_.image-figure]:max-w-full! [&_.expandable-image]:max-w-full! [&_img]:max-w-full!">
+  <div class="box-border my-1 w-full overflow-hidden px-2 xl:w-1/2">
+
+![SSD WD GREEN SATA 2.5](../../assets/blog/laptop-aspire-upgrade/IMG_1440.jpg)
+
+  </div>
+  <div class="box-border my-1 w-full overflow-hidden px-2 xl:w-1/2">
+
+![SSD WD installed](../../assets/blog/laptop-aspire-upgrade/IMG_20240119_204324.jpg)
+
+  </div>
+</div>
+
+What happened to the original HDD? I bought a nice enclosure and turned it into an [external drive](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1706228809/website/aspire%20ubuntu/IMG_20240114_211048_fkcx1v.jpg)!
+
+### CMOS Battery
+
+This thing is not broken or anything. But the old battery is already 13+ years old. Sooner or later, it will die. Since I already
+opened the laptop, why not just replace it? It is cheap anyway.
+
+![CMOS Battery](../../assets/blog/laptop-aspire-upgrade/IMG_1444.jpg)
+
+### Components summary
+
+All components I bought from [Shopee](https://shopee.com.my/).
+
+| Component | Price (RM) |
+|---|---|
+| [Nanya Blue4GB 2Rx8 10600S DDR3 1333Mhz](https://shopee.com.my/Nanya-Blue-2GB-4GB-8GB-2Rx8-PC2-PC3-PC3L-5300S-6400S-10600S-12800S-DDR2-DDR3-DDR3L-667Mhz-800Mhz-1333Mhz-1600Mhz-LAPTOP-RAM-SODIMM-Memory-i.130667135.5764168072) | $26.39 |
+| [WD Green Sata 2.5" SSD 240GB](https://shopee.com.my/-Free-Gift-WD-Green-Sata-2.5-SSD-(120GB-240GB-480GB)-For-Desktop-Laptop-i.864585302.16485763252) | $87.90 |
+| [BIOS CMOS BATTERY CR2032](https://shopee.com.my/LAPTOP-MOTHERBOARD-MAINBOARD-BIOS-CMOS-BATTERY-2-3-PIN(2P-3P)-3V-CR2032-i.14949346.3743475131) | $1.99 |
+
+## Installing the OS
+
+This part is straightforward and I've done this thing before. First, head to the [Ubuntu Desktop](https://ubuntu.com/download/desktop) site to download the ISO to another computer. Get a USB stick (8GB minimum) to flash the ISO using [Balena Etcher](https://etcher.balena.io/) or [Rufus](https://rufus.ie/).
+
+![Balena Etcher Flashing OS](../../assets/blog/laptop-aspire-upgrade/balena-etcher-flashing.png)
+
+Plug the USB stick into the laptop and boot it up. Press F2 to enter the BIOS menu (depends on your laptop manufacturer).
+Reorder the boot priority to USB first. Save and exit. The laptop will boot to the USB stick. After this point, just follow
+the Ubuntu installation wizard.
+
+<div class="flex flex-wrap overflow-hidden [&_.image-figure]:max-w-full! [&_.expandable-image]:max-w-full! [&_img]:max-w-full!">
+  <div class="box-border my-1 w-full overflow-hidden px-2 xl:w-1/2">
+
+![Ubuntu installer installing](../../assets/blog/laptop-aspire-upgrade/IMG_1467.jpg "Installation process")
+  </div>
+  <div class="box-border my-1 w-full overflow-hidden px-2 xl:w-1/2">
+
+![Ubuntu installed restart required](../../assets/blog/laptop-aspire-upgrade/IMG_20240119_191950.jpg "Installed!")
+  </div>
+</div>
+
+Unrelated, but I do miss when laptops have LED status indicators.
+
+![laptop led](../../assets/blog/laptop-aspire-upgrade/IMG_1466.jpg)
+
+After a few restart processes, I finally can interact with the system. Below is the System Information and Activity Monitor.
+
+<div class="flex flex-wrap overflow-hidden [&_.image-figure]:max-w-full! [&_.expandable-image]:max-w-full! [&_img]:max-w-full!">
+  <div class="box-border my-1 w-full overflow-hidden px-2 xl:w-1/2">
+
+![Ubuntu System Info](../../assets/blog/laptop-aspire-upgrade/ubuntu-install_4.png)
+
+  </div>
+  <div class="box-border my-1 w-full overflow-hidden px-2 xl:w-1/2">
+
+![Ubuntu System Monitor](../../assets/blog/laptop-aspire-upgrade/ubuntu-install_3.png)
+
+  </div>
+</div>
+
+I tried to install [Mission Center](https://www.omglinux.com/mission-center-system-monitor-linux/) software. But it seems like it is having some issues with my laptop.
+
+Like every time I do with Linux systems; Installing `htop` and `neofetch`. Also, using the terminal makes me look smart 😎. Haha
+just kidding.
+
+
+<div class="flex flex-wrap overflow-hidden [&_.image-figure]:max-w-full! [&_.expandable-image]:max-w-full! [&_img]:max-w-full!">
+  <div class="box-border my-1 w-full overflow-hidden px-2 xl:w-1/2">
+
+![neofetch](../../assets/blog/laptop-aspire-upgrade/ubuntu-install_1.png)
+
+  </div>
+  <div class="box-border my-1 w-full overflow-hidden px-2 xl:w-1/2">
+
+![htop](../../assets/blog/laptop-aspire-upgrade/ubuntu-install_2.png)
+
+  </div>
+</div>
+
+I also tried coding on it. Because I'm too lazy to install Vscode, git etc. locally, I just use [GitHub Codespace](https://github.com/features/codespaces) to code. It
+works great! The keyboard is still very pleasant to type on.
+
+I think that's it for this post. Thank you for reading until the end. If you also happen to have an unused old laptop lying around, why not
+try to upgrade it? It is fun and you will learn a lot. You can give it to your siblings or children for light use. Or save it for yourself
+as an emergency laptop.
+
+Tata!
+
+![Laptop acer aspire upgraded](../../assets/blog/laptop-aspire-upgrade/IMG_20240121_231044.jpg)
+
+## Some issues I've encountered
+
+- The laptop won't boot if I swap the position of the [RAM](#ram) installment. I had this arrangement initially; top = old, bottom = new.
+Solution: Swapped the position, it boots. The reason is unclear.
+- Before the new RAM arrived, I attempted to install Ubuntu first. But the installer got stuck and was not responsive. I even tried to
+use Ubuntu [Safe Graphics](https://res.cloudinary.com/iqfareez-cloud/image/upload/v1706228807/website/aspire%20ubuntu/IMG_1450_dtzxau.jpg) mode, the responsiveness improved, but the screen froze multiple times. Perhaps 2GB RAM is too
+little for the installer to run smoothly. Solution: Wait patiently for the new RAM to arrive.

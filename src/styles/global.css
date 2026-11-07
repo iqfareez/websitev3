@@ -98,6 +98,22 @@
 		height: auto;
 		border-radius: 8px;
 	}
+	.prose .image-figure {
+		width: fit-content;
+		max-width: 100%;
+		margin: 1em auto 1.2em;
+	}
+	.prose .image-figure > a,
+	.prose .image-figure img {
+		display: block;
+	}
+	.prose .image-figure figcaption {
+		margin-top: 0.5rem;
+		color: var(--color-zinc-600);
+		font-size: 0.875rem;
+		line-height: 1.5;
+		text-align: center;
+	}
 	pre,
 	code {
 		font-family: var(--font-geist-mono);

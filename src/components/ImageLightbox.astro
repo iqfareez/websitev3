@@ -175,8 +175,13 @@ import { IconX } from "@tabler/icons-astro";
         expandedImage.srcset = image.srcset;
         expandedImage.sizes = "100vw";
         expandedImage.alt = image.alt;
-        caption.textContent = image.alt;
-        caption.hidden = !image.alt;
+        const figureCaption = image
+          .closest("figure")
+          ?.querySelector("figcaption")
+          ?.textContent?.trim();
+        const captionText = figureCaption || "";
+        caption.textContent = captionText;
+        caption.hidden = !captionText;
         const link = image.closest("a");
         imageLink.hidden = !link;
         if (link) imageLink.href = link.href;

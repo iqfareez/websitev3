@@ -5,6 +5,8 @@ import sitemap from '@astrojs/sitemap';
 import { defineConfig, fontProviders } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import expressiveCode from 'astro-expressive-code';
+import { satteri } from '@astrojs/markdown-satteri';
+import { imageCaptions } from './src/plugins/image-captions.mjs';
 
 /** @type {import('astro').AstroIntegration} */
 const debugPages = {
@@ -27,6 +29,9 @@ const debugPages = {
 export default defineConfig({
     site: 'https://iqfareez.com',
     integrations: [expressiveCode(), mdx(), sitemap(), debugPages],
+    markdown: {
+        processor: satteri({ hastPlugins: [imageCaptions] }),
+    },
     redirects: {
         '/gh': 'https://github.com/iqfareez?tab=repositories',
     },
