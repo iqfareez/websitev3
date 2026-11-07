@@ -2,6 +2,9 @@
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities);
 
+/* Include utility classes authored inside Markdown and MDX articles. */
+@source '../content/blog';
+
 @layer base {
 	/*
 	  The CSS in this style tag is based off of Bear Blog's default CSS.
